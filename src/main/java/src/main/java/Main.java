@@ -2,8 +2,12 @@ package src.main.java;
 
 public class Main {
 
-    public static void main(String[] args) {
+    private static int width = 400;
+    private static int height = 400;
 
-        GUI.genMainMenu("Kaku-swing Chess", 400, 400);
+    public static void main(String[] args) { // could probably do some shitty logic heres with how i've implemented GUI
+
+        GUI.genMainMenu("Kaku-swing Chess", width, height);
+        //GUI.gameScreen(width, height);
     }
 }

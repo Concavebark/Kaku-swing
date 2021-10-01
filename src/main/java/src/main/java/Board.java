@@ -1,5 +1,7 @@
 package src.main.java;
 
+import javax.swing.*;
+
 import static java.lang.Math.abs;
 
 import java.util.ArrayList;
@@ -7,6 +9,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class Board {
+
 
     private Piece[][] boardState = new Piece[8][8];
 
@@ -92,12 +95,12 @@ public class Board {
 
         return 1; //was false
     }
+
     /**validLocalCoords is specific for Knight move calculation, it's a list of where a Knight piece can legally move on the board,
      * and this method is used to take the coordinates from a local perspective and globalize them,
      * so we can use them to move the piece **/
     static final int[][] validLocalCoords = {{-1,2}, {1,2}, {2,1}, {2,-1}, {1,-2}, {-1,-2}, {-2,-1}, {-2,1}}; //This really shouldn't ever be changed
-    //int[][] tempLocalCoords = {{-1,2}, {1,2}, {2,1}, {2,-1}, {1,-2}, {-1,-2}, {-2,-1}, {-2,1}};
-    //a possible flaw in all of this is that when tempLoc gets overwritten, it gets overwritten in validGlobalCoords too, since a pointer is unavailable or garbage
+
     private ArrayList<ArrayList<Integer>> calcValidKnightMovesArrLst(int oldX, int oldY) {
         //tempLocalCoords = validLocalCoords;
         ArrayList<Integer> currentLoc = new ArrayList<>(Arrays.asList(oldX,oldY));
@@ -119,7 +122,6 @@ public class Board {
         }
         return validGlobalCoords;
     }
-    //-- REMOVED calcValidKnightMoves -- this method was previously based around using a bunch of normal static arrays, and had to be remade, which is now calcValidKnightMovesArrLst
 
     public boolean isMoveValid(int oldY, int oldX, int newY, int newX) {
 
@@ -338,6 +340,10 @@ public class Board {
     public boolean isKingInCheckMate(int kingX, int kingY){ // this is terrible, yes, but its efficient. So suck my nuts.
         //                                  left                          up                                                                                                       top left                                                                                                  right                                                                                                   below                                                                                               bottom right                                                                                             bottom left                                                                                                   top right
         return (isMoveValid(kingX, kingY, kingX-1, kingY) == isMoveValid(kingX, kingY, kingX, kingY-1) && isMoveValid(kingX, kingY, kingX-1, kingY) == isMoveValid(kingX, kingY, kingX-1, kingY-1) && isMoveValid(kingX, kingY, kingX-1, kingY) == isMoveValid(kingX, kingY, kingX+1, kingY) && isMoveValid(kingX, kingY, kingX-1, kingY) == isMoveValid(kingX, kingY, kingX, kingY+1) && isMoveValid(kingX, kingY, kingX-1, kingY) == isMoveValid(kingX, kingY, kingX+1, kingY+1) && isMoveValid(kingX, kingY, kingX-1, kingY) == isMoveValid(kingX, kingY, kingX-1, kingY+1) && isMoveValid(kingX, kingY, kingX-1, kingY) == isMoveValid(kingX, kingY, kingX+1, kingY-1) && !isMoveValid(kingX, kingY, kingX+1, kingY-1));
+    }
+
+    public Piece getPiece(int xPos, int yPos) {
+        return boardState[xPos][yPos];
     }
 
     public Piece[][]  getBoardState(){
