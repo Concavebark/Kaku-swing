@@ -10,6 +10,20 @@ import java.util.Objects;
 
 public class Board {
 
+    //Load all piece images here, so that while the board is being instantiated the images for the pieces are as well.
+    public ImageIcon whiteRook = new ImageIcon("res/whiteRook.png");
+    public ImageIcon whiteKnight = new ImageIcon();
+    public ImageIcon whiteBishop = new ImageIcon();
+    public ImageIcon whiteQueen = new ImageIcon();
+    public ImageIcon whiteKing = new ImageIcon();
+    public ImageIcon whitePawn = new ImageIcon();
+
+    public ImageIcon blackRook = new ImageIcon();
+    public ImageIcon blackKnight = new ImageIcon();
+    public ImageIcon blackBishop = new ImageIcon();
+    public ImageIcon blackQueen = new ImageIcon();
+    public ImageIcon blackKing = new ImageIcon();
+    public ImageIcon blackPawn = new ImageIcon();
 
     private Piece[][] boardState = new Piece[8][8];
 

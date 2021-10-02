@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+//TODO: Think about move highlighting. Could change button color based on available moves.
+
 public class GUI {
 
     private static Board board = new Board();
@@ -19,10 +21,11 @@ public class GUI {
     public static String title = "Err: Title not reassigned";
     public static int width = 400;
     public static int height = 400;
+
     private static JButton[][] b = new JButton[8][8];
     private static ArrayList<Integer> moveData = new ArrayList<Integer>(4);
 
-    //this later will be deprecated but i'm gonna use it to allow for something to fall back on
+    //this later will be deprecated, but I'm going to use it to allow for something to fall back on
     public static void initStandardGUI() {
         JFrame frame = new JFrame(title);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -57,6 +60,34 @@ public class GUI {
         frame.setVisible(true);
     }
 
+    public static void attributeImages() {
+        for (int x = 0; x < 8; x++) {
+            for (int y = 0; y < 8; y++) {
+                PieceInfo pieceAfil = board.getPiece(x,y).getAffiliation();
+                PieceInfo pieceType = board.getPiece(x,y).getType();
+                Piece piece = board.getPiece(x,y);
+                Dimension buttonSize = b[x][y].getSize();
+                System.out.println("Afilliation: " + pieceAfil + " Type: "+pieceType +" X: "+x + " Y: " + y);
+                switch(pieceType) {
+                    case ROOK:
+                        if(pieceAfil == PieceInfo.WHITE) b[x][y].setIcon(applyResizedImageToButton(board.whiteRook, b[x][y]));
+                        if(pieceAfil == PieceInfo.BLACK) b[x][y].setIcon(applyResizedImageToButton(board.blackRook, b[x][y]));
+                        break;
+                    default:
+                        // this is probably going to only be blank
+                        break;
+                }
+            }
+        }
+    }
+
+    public static ImageIcon applyResizedImageToButton(ImageIcon imageIcon, JButton button) {
+        Dimension buttonSize = button.getSize();
+        System.out.println("Button Size: " + buttonSize.toString());
+        Image img = imageIcon.getImage();
+        Image resizedImage = img.getScaledInstance(buttonSize.width, buttonSize.height, java.awt.Image.SCALE_SMOOTH);
+        return new ImageIcon(resizedImage);
+    }
 
     public static void createCheckerBoard(JPanel checkerBoardPanel) {
         checkerBoardPanel.setLayout(new GridLayout(8,8));
@@ -92,11 +123,12 @@ public class GUI {
 
         JButton quitGameButton = new JButton("Quit");
         JLabel playerOneLabel = new JLabel("sugma"); //obviously playerOneLabel and playerTwoLabel will be changed later
-        JLabel playerTwoLabel = new JLabel("sugma");
+        JLabel playerTwoLabel = new JLabel("ligma");
 
         quitGameButton.addActionListener(new ButtonClickListener()); //kill this window
 
         createCheckerBoard(checkerBoardPanel);
+        //attributeImages();
 
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -118,6 +150,7 @@ public class GUI {
         gameFrame.add(exteriorPanel, BorderLayout.CENTER);
         gameFrame.pack();
         gameFrame.setVisible(true);
+        attributeImages();
     }
 
     public static void imageTesting(int _width, int _height) {
@@ -126,9 +159,8 @@ public class GUI {
         testingFrame.setSize(_width, _height);
 
         //ImageIcon whiteRook = imgHandler.getSimpleImage("/res/whiteRook.jpg");
-        //ImageIcon whiteRook = new ImageIcon("res/whiteRook.jpg");
+        ImageIcon whiteRook = new ImageIcon("res/whiteRook.jpg");
 
-        ImageIcon whiteRook = imgHandler.getSimpleImage("res/whiteRook.jpg");
 
         int w = whiteRook.getIconWidth();
         int h = whiteRook.getIconHeight();
@@ -237,6 +269,7 @@ public class GUI {
             if (playerHasMoved) {
                 moveData.clear(); //clears all move data so that moveData can be reused.
                 pieceSelected = false;
+                attributeImages();//TODO: MAKE SURE THIS WORKS, COULD BE AN EASY WAY TO UPDATE THE BOARD JUST AFTER A PLAYER MAKES A MOVE
                 // THIS SHOULD ALSO BE THE POINT WHERE THE "TURN" GETS SWITCHED OVER, AND I JUST REALIZED I DON'T HAVE TURNS IMPLEMENTED YET
             }
         }
