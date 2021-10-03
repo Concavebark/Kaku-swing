@@ -10,20 +10,23 @@ import java.util.Objects;
 
 public class Board {
 
+    //TODO: LOOK INTO A METHOD OF SELECTING IMAGES ELSEWHERE ON THE COMPUTER SO THE USER CAN USE THEIR OWN CHESS PIECES
     //Load all piece images here, so that while the board is being instantiated the images for the pieces are as well.
     public ImageIcon whiteRook = new ImageIcon("res/whiteRook.png");
-    public ImageIcon whiteKnight = new ImageIcon();
-    public ImageIcon whiteBishop = new ImageIcon();
-    public ImageIcon whiteQueen = new ImageIcon();
-    public ImageIcon whiteKing = new ImageIcon();
-    public ImageIcon whitePawn = new ImageIcon();
+    public ImageIcon whiteKnight = new ImageIcon("res/whiteKnight.png");
+    public ImageIcon whiteBishop = new ImageIcon("res/whiteBishop.png");
+    public ImageIcon whiteQueen = new ImageIcon("res/whiteQueen.png");
+    public ImageIcon whiteKing = new ImageIcon("res/whiteKing.png");
+    public ImageIcon whitePawn = new ImageIcon("res/whitePawn.png");
 
-    public ImageIcon blackRook = new ImageIcon();
-    public ImageIcon blackKnight = new ImageIcon();
-    public ImageIcon blackBishop = new ImageIcon();
-    public ImageIcon blackQueen = new ImageIcon();
-    public ImageIcon blackKing = new ImageIcon();
-    public ImageIcon blackPawn = new ImageIcon();
+    public ImageIcon blackRook = new ImageIcon("res/blackRook.png");
+    public ImageIcon blackKnight = new ImageIcon("res/blackKnight.png");
+    public ImageIcon blackBishop = new ImageIcon("res/blackBishop.png");
+    public ImageIcon blackQueen = new ImageIcon("res/blackQueen.png");
+    public ImageIcon blackKing = new ImageIcon("res/blackKing.png");
+    public ImageIcon blackPawn = new ImageIcon("res/blackPawn.png");
+
+    public ImageIcon blank = new ImageIcon("res/Blank.png");
 
     private Piece[][] boardState = new Piece[8][8];
 
@@ -51,7 +54,7 @@ public class Board {
         Piece oldPiece = boardState[oldY][oldX];
 
         if(oldPiece.getType() != PieceInfo.BLANK && isMoveValid(oldY, oldX, newY, newX)){
-
+            System.out.println("Applying movement");
             Piece[][] tempBoard = boardState;
             tempBoard[oldY][oldX] = new Piece();
             tempBoard[newY][newX] = oldPiece;

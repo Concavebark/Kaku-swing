@@ -13,14 +13,16 @@ public class GUI {
 
     private static Board board = new Board();
 
-    private static final ImageHandler imgHandler = new ImageHandler();
 
-    private static JFrame gameFrame; // Required a script-wide scope reference to the JFrame used by our game loop
-    private static JFrame mainMenuFrame; // Same thing as gameFrame, this is just an easier solution instead of having to think about it.
+    public static JFrame gameFrame; // Required a script-wide scope reference to the JFrame used by our game loop
+    public static JFrame mainMenuFrame; // Same thing as gameFrame, this is just an easier solution instead of having to think about it.
 
     public static String title = "Err: Title not reassigned";
     public static int width = 400;
     public static int height = 400;
+
+    public static String pOneString = "sugma";//these will be updated with values after options are implemented
+    public static String pTwoString = "ligma";
 
     private static JButton[][] b = new JButton[8][8];
     private static ArrayList<Integer> moveData = new ArrayList<Integer>(4);
@@ -67,14 +69,35 @@ public class GUI {
                 PieceInfo pieceType = board.getPiece(x,y).getType();
                 Piece piece = board.getPiece(x,y);
                 Dimension buttonSize = b[x][y].getSize();
-                System.out.println("Afilliation: " + pieceAfil + " Type: "+pieceType +" X: "+x + " Y: " + y);
+                //JAMES SUGGESTION: TERNARY OPERATOR BS IDK
                 switch(pieceType) {
                     case ROOK:
                         if(pieceAfil == PieceInfo.WHITE) b[x][y].setIcon(applyResizedImageToButton(board.whiteRook, b[x][y]));
                         if(pieceAfil == PieceInfo.BLACK) b[x][y].setIcon(applyResizedImageToButton(board.blackRook, b[x][y]));
                         break;
+                    case KNIGHT:
+                        if(pieceAfil == PieceInfo.WHITE) b[x][y].setIcon(applyResizedImageToButton(board.whiteKnight, b[x][y]));
+                        if(pieceAfil == PieceInfo.BLACK) b[x][y].setIcon(applyResizedImageToButton(board.blackKnight, b[x][y]));
+                        break;
+                    case BISHOP:
+                        if(pieceAfil == PieceInfo.WHITE) b[x][y].setIcon(applyResizedImageToButton(board.whiteBishop, b[x][y]));
+                        if(pieceAfil == PieceInfo.BLACK) b[x][y].setIcon(applyResizedImageToButton(board.blackBishop, b[x][y]));
+                        break;
+                    case QUEEN:
+                        if(pieceAfil == PieceInfo.WHITE) b[x][y].setIcon(applyResizedImageToButton(board.whiteQueen, b[x][y]));
+                        if(pieceAfil == PieceInfo.BLACK) b[x][y].setIcon(applyResizedImageToButton(board.blackQueen, b[x][y]));
+                        break;
+                    case KING:
+                        if(pieceAfil == PieceInfo.WHITE) b[x][y].setIcon(applyResizedImageToButton(board.whiteKing, b[x][y]));
+                        if(pieceAfil == PieceInfo.BLACK) b[x][y].setIcon(applyResizedImageToButton(board.blackKing, b[x][y]));
+                        break;
+                    case PAWN:
+                        if(pieceAfil == PieceInfo.WHITE) b[x][y].setIcon(applyResizedImageToButton(board.whitePawn, b[x][y]));
+                        if(pieceAfil == PieceInfo.BLACK) b[x][y].setIcon(applyResizedImageToButton(board.blackPawn, b[x][y]));
+                        break;
                     default:
                         // this is probably going to only be blank
+                        b[x][y].setIcon(applyResizedImageToButton(board.blank, b[x][y]));
                         break;
                 }
             }
@@ -83,13 +106,13 @@ public class GUI {
 
     public static ImageIcon applyResizedImageToButton(ImageIcon imageIcon, JButton button) {
         Dimension buttonSize = button.getSize();
-        System.out.println("Button Size: " + buttonSize.toString());
         Image img = imageIcon.getImage();
         Image resizedImage = img.getScaledInstance(buttonSize.width, buttonSize.height, java.awt.Image.SCALE_SMOOTH);
         return new ImageIcon(resizedImage);
     }
 
     public static void createCheckerBoard(JPanel checkerBoardPanel) {
+        board = new Board(); //hopefully this creates a new instance each time the checkerboard is generated
         checkerBoardPanel.setLayout(new GridLayout(8,8));
         //JButton b[][] = new JButton[8][8];
         for (int x = 0; x < 8; x++) {
@@ -98,7 +121,7 @@ public class GUI {
                 if ((x+y) % 2 == 0) {
                     b[x][y].setBackground(Color.WHITE);
                 } else {
-                    b[x][y].setBackground(Color.BLACK);
+                    b[x][y].setBackground(Color.DARK_GRAY);
                 }
                 b[x][y].addActionListener(new ChessClickListener());
                 checkerBoardPanel.add(b[x][y]);
@@ -122,13 +145,14 @@ public class GUI {
         exteriorPanel.setLayout(gonk);
 
         JButton quitGameButton = new JButton("Quit");
-        JLabel playerOneLabel = new JLabel("sugma"); //obviously playerOneLabel and playerTwoLabel will be changed later
-        JLabel playerTwoLabel = new JLabel("ligma");
+        JLabel playerOneLabel = new JLabel(pOneString); //obviously playerOneLabel and playerTwoLabel will be changed later
+        JLabel playerTwoLabel = new JLabel(pTwoString); //Use color to indicate who has the turn
+
+        playerOneLabel.setForeground(Color.GREEN);
 
         quitGameButton.addActionListener(new ButtonClickListener()); //kill this window
 
         createCheckerBoard(checkerBoardPanel);
-        //attributeImages();
 
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -247,13 +271,12 @@ public class GUI {
         }
         return location;
     }
-
+    private static boolean pieceSelected = false;
     //TODO: Figure out implementation to discover if the selected piece is movable by the current player
     //TODO: Also figure out a good way to store 4 ints as movement data eg: oldX, oldY, newX, newY
     private static class ChessClickListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             JButton button = (JButton) e.getSource();
-            boolean pieceSelected = false;
             boolean playerHasMoved = false;
             if (!pieceSelected) {
                 moveData.add(findButton(button).get(0));
@@ -262,7 +285,8 @@ public class GUI {
             } else if (pieceSelected) {
                 moveData.add(findButton(button).get(0));
                 moveData.add(findButton(button).get(1)); // then use this to move piece in the Board class
-                board.movePiece(moveData.get(1), moveData.get(0), moveData.get(3), moveData.get(2));
+                //TODO: this currently works as movement and everything, but really should change it to be something that the player can actually see and understand
+                System.out.println("MOVEMENT RETURN CODE: " +board.movePiece(moveData.get(0), moveData.get(1), moveData.get(2), moveData.get(3)));
                 playerHasMoved = true;
                 pieceSelected = false;
             }
