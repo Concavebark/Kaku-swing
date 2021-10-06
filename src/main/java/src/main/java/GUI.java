@@ -13,9 +13,8 @@ public class GUI {
 
     private static Board board = new Board();
 
-
-    public static JFrame gameFrame; // Required a script-wide scope reference to the JFrame used by our game loop
-    public static JFrame mainMenuFrame; // Same thing as gameFrame, this is just an easier solution instead of having to think about it.
+    private static JFrame gameFrame; // Required a script-wide scope reference to the JFrame used by our game loop
+    private static JFrame mainMenuFrame; // Same thing as gameFrame, this is just an easier solution instead of having to think about it.
 
     public static String title = "Err: Title not reassigned";
     public static int width = 400;
@@ -23,6 +22,10 @@ public class GUI {
 
     public static String pOneString = "sugma";//these will be updated with values after options are implemented
     public static String pTwoString = "ligma";
+
+    public static Color boardColorA = Color.WHITE;
+    public static Color boardColorB = Color.BLACK;
+    public static Color highlightColor = Color.CYAN;
 
     private static JButton[][] b = new JButton[8][8];
     private static ArrayList<Integer> moveData = new ArrayList<Integer>(4);
@@ -34,31 +37,24 @@ public class GUI {
                 PieceInfo pieceType = board.getPiece(x,y).getType();
                 Piece piece = board.getPiece(x,y);
                 Dimension buttonSize = b[x][y].getSize();
-                //JAMES SUGGESTION: TERNARY OPERATOR BS IDK
                 switch(pieceType) {
                     case ROOK:
-                        if(pieceAfil == PieceInfo.WHITE) b[x][y].setIcon(applyResizedImageToButton(board.whiteRook, b[x][y]));
-                        if(pieceAfil == PieceInfo.BLACK) b[x][y].setIcon(applyResizedImageToButton(board.blackRook, b[x][y]));
+                        b[x][y].setIcon(applyResizedImageToButton((pieceAfil == PieceInfo.WHITE ? board.whiteRook : board.blackRook), b[x][y]));
                         break;
                     case KNIGHT:
-                        if(pieceAfil == PieceInfo.WHITE) b[x][y].setIcon(applyResizedImageToButton(board.whiteKnight, b[x][y]));
-                        if(pieceAfil == PieceInfo.BLACK) b[x][y].setIcon(applyResizedImageToButton(board.blackKnight, b[x][y]));
+                        b[x][y].setIcon(applyResizedImageToButton((pieceAfil == PieceInfo.WHITE ? board.whiteKnight : board.blackKnight), b[x][y]));
                         break;
                     case BISHOP:
-                        if(pieceAfil == PieceInfo.WHITE) b[x][y].setIcon(applyResizedImageToButton(board.whiteBishop, b[x][y]));
-                        if(pieceAfil == PieceInfo.BLACK) b[x][y].setIcon(applyResizedImageToButton(board.blackBishop, b[x][y]));
+                        b[x][y].setIcon(applyResizedImageToButton((pieceAfil == PieceInfo.WHITE ? board.whiteBishop : board.blackBishop), b[x][y]));
                         break;
                     case QUEEN:
-                        if(pieceAfil == PieceInfo.WHITE) b[x][y].setIcon(applyResizedImageToButton(board.whiteQueen, b[x][y]));
-                        if(pieceAfil == PieceInfo.BLACK) b[x][y].setIcon(applyResizedImageToButton(board.blackQueen, b[x][y]));
+                        b[x][y].setIcon(applyResizedImageToButton((pieceAfil == PieceInfo.WHITE ? board.whiteQueen : board.blackQueen), b[x][y]));
                         break;
                     case KING:
-                        if(pieceAfil == PieceInfo.WHITE) b[x][y].setIcon(applyResizedImageToButton(board.whiteKing, b[x][y]));
-                        if(pieceAfil == PieceInfo.BLACK) b[x][y].setIcon(applyResizedImageToButton(board.blackKing, b[x][y]));
+                        b[x][y].setIcon(applyResizedImageToButton((pieceAfil == PieceInfo.WHITE ? board.whiteKing : board.blackKing), b[x][y]));
                         break;
                     case PAWN:
-                        if(pieceAfil == PieceInfo.WHITE) b[x][y].setIcon(applyResizedImageToButton(board.whitePawn, b[x][y]));
-                        if(pieceAfil == PieceInfo.BLACK) b[x][y].setIcon(applyResizedImageToButton(board.blackPawn, b[x][y]));
+                        b[x][y].setIcon(applyResizedImageToButton((pieceAfil == PieceInfo.WHITE ? board.whitePawn : board.blackPawn), b[x][y]));
                         break;
                     default:
                         b[x][y].setIcon(applyResizedImageToButton(board.blank, b[x][y]));
@@ -76,16 +72,15 @@ public class GUI {
     }
 
     public static void createCheckerBoard(JPanel checkerBoardPanel) {
-        board = new Board(); //hopefully this creates a new instance each time the checkerboard is generated
+        board = new Board();
         checkerBoardPanel.setLayout(new GridLayout(8,8));
-        //JButton b[][] = new JButton[8][8];
         for (int x = 0; x < 8; x++) {
-            for (int y =0; y < 8; y++) {
+            for (int y = 0; y < 8; y++) {
                 b[x][y] = new JButton();
                 if ((x+y) % 2 == 0) {
-                    b[x][y].setBackground(Color.WHITE);
+                    b[x][y].setBackground(boardColorA);
                 } else {
-                    b[x][y].setBackground(Color.DARK_GRAY);
+                    b[x][y].setBackground(boardColorB);
                 }
                 b[x][y].addActionListener(new ChessClickListener());
                 checkerBoardPanel.add(b[x][y]);
@@ -146,9 +141,26 @@ public class GUI {
         JFrame optionsFrame = new JFrame("Options");
         optionsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Might need to change to hide while we update settings files in the background
         optionsFrame.setSize(_width, _height);
+        /*
+         *  TODO: User should be allowed to set their own piece icons and board colors,
+         *   also should be able to change the move highlight to whatever they want
+         */
+        JPanel optionsPanel = new JPanel(); // should probably use gridBag but idfk rn
+        JPanel colorPanel = new JPanel();
+
+        JButton colorChangeA = new JButton("Change ColorA");
+        JButton colorChangeB = new JButton("Change ColorB");
+        JButton highlightChange = new JButton("Change Highlight Color");
+
+        colorChangeA.addActionListener(new colorStuffListener());
+        colorChangeB.addActionListener(new colorStuffListener());
+        highlightChange.addActionListener(new colorStuffListener());
 
 
-
+        optionsPanel.add(colorChangeA);
+        optionsPanel.add(colorChangeB);
+        optionsPanel.add(highlightChange);
+        optionsFrame.add(optionsPanel);
         optionsFrame.setVisible(true);
     }
 
@@ -171,7 +183,6 @@ public class GUI {
         testingFrame.setVisible(true);
     }
 
-    // STOPPED LAST WAS ON https://www.javatpoint.com/java-gridbaglayout
     public static void genMainMenu(String _MainMenuTitle, int _width, int _height) {
         // should have just a few buttons, start, quit, probably something like an options menu
 
@@ -227,7 +238,7 @@ public class GUI {
     public static void setHeight(int _height) { height = _height; }
     public static int getHeight() { return height; }
 
-    private static ArrayList<Integer> findButton(JButton _button) {
+    private static ArrayList<Integer> findCoordsFromButton(JButton _button) {
         ArrayList<Integer> location = new ArrayList<>(4);
         for (int x = 0; x < 8; x++) {
             for (int y = 0; y < 8; y++) {
@@ -241,24 +252,55 @@ public class GUI {
         return location;
     }
 
+    private static class colorStuffListener extends Component implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            String command = e.getActionCommand();
+            switch (command) {
+                case "Change ColorA" -> {
+                    Color initialColor = Color.WHITE;
+                    boardColorA = JColorChooser.showDialog(this, "Select a Color", initialColor);
+                }
+                case "Change ColorB" -> {
+                    Color initialColor = Color.BLACK;
+                    boardColorB = JColorChooser.showDialog(this, "Select a Color", initialColor);
+                }
+                case "Change Highlight Color" -> {
+                    Color initialColor = Color.CYAN;
+                    highlightColor = JColorChooser.showDialog(this, "Select a Color", initialColor);
+                }
+            }
+
+        }
+    }
+
     private static boolean pieceSelected = false;
     //TODO: Figure out implementation to discover if the selected piece is movable by the current player
     //TODO: Also figure out a good way to store 4 ints as movement data eg: oldX, oldY, newX, newY
     private static class ChessClickListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            JButton button = (JButton) e.getSource();
+            JButton button = (JButton) e.getSource(); // TODO: RIGHT HERE BUDD
             boolean playerHasMoved = false;
             if (!pieceSelected) {
-                moveData.add(findButton(button).get(0));
-                moveData.add(findButton(button).get(1));
+                moveData.add(findCoordsFromButton(button).get(0));
+                moveData.add(findCoordsFromButton(button).get(1));
                 pieceSelected = true;
+
+                for(int y = 0; y < 8; y++)
+                    for(int x = 0; x < 8; x++)
+                        if(board.isMoveValid(moveData.get(0), moveData.get(1), y, x) && board.getPiece(moveData.get(0), moveData.get(1)).getType() != PieceInfo.BLANK)
+                            b[y][x].setBackground(highlightColor);
+
             } else if (pieceSelected) {
-                moveData.add(findButton(button).get(0));
-                moveData.add(findButton(button).get(1)); // then use this to move piece in the Board class
+                moveData.add(findCoordsFromButton(button).get(0));
+                moveData.add(findCoordsFromButton(button).get(1)); // then use this to move piece in the Board class
                 //TODO: this currently works as movement and everything, but really should change it to be something that the player can actually see and understand
                 System.out.println("MOVEMENT RETURN CODE: " +board.movePiece(moveData.get(0), moveData.get(1), moveData.get(2), moveData.get(3)));
                 playerHasMoved = true;
                 pieceSelected = false;
+
+                for(int y = 0; y < 8; y++)
+                    for(int x = 0; x < 8; x++)
+                        b[y][x].setBackground(((y + x) % 2 == 0 ? boardColorA : boardColorB));
             }
             if (playerHasMoved) {
                 moveData.clear(); //clears all move data so that moveData can be reused.

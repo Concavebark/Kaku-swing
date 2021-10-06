@@ -156,9 +156,12 @@ public class Board {
             int distanceX = abs(newX - oldX);
             int distanceY = abs(newY - oldY);
 
-            int direction; // had to instantiate these here because IntelliJ doesn't understand how scope works
+            int directionX; // had to instantiate these here because IntelliJ doesn't understand how scope works
+            int directionY;
             int checkX;
             int checkY;
+
+            boolean imLosingMyMind = true;
             // the entire switch case is dedicated to exposing that a move is illegal, otherwise it'll be treated as legal
             switch(oldPiece.getType()){
 
@@ -204,50 +207,64 @@ public class Board {
                     locStorage.clear(); // Doesn't appear to be necessary, but I'm leaving it in to MAKE SURE nothing gets messed up, also helps with memory usage
                     break;
                 case BISHOP:
-                    if(newX-oldX != newY-oldY)
-                        return false; // x and y have to be the same
+                    if(Math.abs(oldX-newX) != Math.abs(oldY-newY))
+                        return false; // x and y have the same magnitude magnitits
                     //TODO: check to see if the equation (newX-oldX)/((newX-oldX)*-1) could just be declared above switch case and re-used
-                    direction = (newX-oldX)/((newX-oldX)*-1); // get the direction to iterate
+                    directionX = Math.max(-1, Math.min(1, (oldX-newX)*-1)); // get the direction to iterate
+                    directionY = Math.max(-1, Math.min(1, (oldY-newY)*-1));
 
-                    checkX = oldX + direction;
-                    checkY = oldY + direction;
+                    checkX = oldX + directionX;
+                    checkY = oldY + directionY;
+
+                    imLosingMyMind = true;
+
                     while(checkX < 8 && checkY < 8 && checkX > 0 && checkY > 0) {
 
-                        if (boardState[checkY][checkX].getType() != PieceInfo.BLANK && checkX != newX)
-                            return false; // Bishop cannot pass through any pieces
+                        if (boardState[checkY][checkX].getType() != PieceInfo.BLANK && checkX != newX && checkY != newY)
+                            imLosingMyMind =  false; // Bishop cannot pass through any pieces
 
-                        if(boardState[checkY][checkX].getAffiliation() == oldPiece.getAffiliation() && checkX == newX)
-                            return false; // Bishop cannot end on a piece of the same affiliation
+                        if(boardState[checkY][checkX].getAffiliation() == oldPiece.getAffiliation() && checkX == newX && checkY == newY)
+                            imLosingMyMind =  false; // Bishop cannot end on a piece of the same affiliation
 
                         if(checkX == newX)
                             break; // Reached destination without issues
 
-                        checkX += direction; // Iterate to next spot in path
-                        checkY += direction;
+                        checkX += directionX; // Iterate to next spot in path
+                        checkY += directionY;
                     }
+
+                    if(!imLosingMyMind)
+                        return false;
 
                     break;
                 case QUEEN:
-                    if(newX - oldX == newY - oldY){ // angled move
+                    if(Math.abs(oldX-newX) == Math.abs(oldY-newY)){ // angled move
 
-                        direction = (newX-oldX)/((newX-oldX)*-1); // get the direction to iterate
+                        directionX = Math.max(-1, Math.min(1, (oldX-newX)*-1)); // get the direction to iterate
+                        directionY = Math.max(-1, Math.min(1, (oldY-newY)*-1));
 
-                        checkX = oldX + direction;
-                        checkY = oldY + direction;
+                        checkX = oldX + directionX;
+                        checkY = oldY + directionY;
+
+                        imLosingMyMind = true;
+
                         while(checkX < 8 && checkY < 8 && checkX > 0 && checkY > 0) {
 
-                            if (boardState[checkY][checkX].getType() != PieceInfo.BLANK && checkX != newX)
-                                return false; // Queen cannot pass through any pieces
+                            if (boardState[checkY][checkX].getType() != PieceInfo.BLANK && checkX != newX && checkY != newY)
+                                imLosingMyMind =  false; // Bishop cannot pass through any pieces
 
-                            if(boardState[checkY][checkX].getAffiliation() == oldPiece.getAffiliation() && checkX == newX)
-                                return false; // Queen cannot end on a piece of the same affiliation
+                            if(boardState[checkY][checkX].getAffiliation() == oldPiece.getAffiliation() && checkX == newX && checkY == newY)
+                                imLosingMyMind =  false; // Bishop cannot end on a piece of the same affiliation
 
                             if(checkX == newX)
                                 break; // Reached destination without issues
 
-                            checkX += direction; // Iterate to next spot in path
-                            checkY += direction;
+                            checkX += directionX; // Iterate to next spot in path
+                            checkY += directionY;
                         }
+
+                        if(!imLosingMyMind)
+                            return false;
                     }else{
 
                         if((distanceX == 0 && distanceY > 0) || (distanceY == 0 && distanceX > 0)){ // sideways move
@@ -316,7 +333,9 @@ public class Board {
                             if(distanceX > 1)
                                 return false;
                         }
-                    }
+                    }else
+                        if(distanceX > 0)
+                            return false;
 
                     if(distanceX == 0 && distanceY > 0){ // Pawns cannot move forward through another piece
 
