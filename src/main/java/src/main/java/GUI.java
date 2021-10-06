@@ -27,41 +27,6 @@ public class GUI {
     private static JButton[][] b = new JButton[8][8];
     private static ArrayList<Integer> moveData = new ArrayList<Integer>(4);
 
-    //this later will be deprecated, but I'm going to use it to allow for something to fall back on
-    public static void initStandardGUI() {
-        JFrame frame = new JFrame(title);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(width, height);
-
-        JMenuBar mb = new JMenuBar();
-        JMenu m1 = new JMenu("FILE");
-        JMenu m2 = new JMenu("Help");
-        mb.add(m1);
-        mb.add(m2);
-        JMenuItem m11 = new JMenuItem("Open");
-        JMenuItem m22 = new JMenuItem("Save as");
-        m1.add(m11);
-        m1.add(m22);
-
-        JPanel panel = new JPanel();
-        JLabel label = new JLabel("Enter Text");
-        JTextField tf = new JTextField(10);
-        JButton send = new JButton("Send");
-        JButton reset = new JButton("Reset");
-        panel.add(label);
-        panel.add(tf);
-        panel.add(send);
-        panel.add(reset);
-
-        JTextArea ta = new JTextArea();
-
-        frame.getContentPane().add(BorderLayout.SOUTH, panel);
-        frame.getContentPane().add(BorderLayout.NORTH, mb);
-        frame.getContentPane().add(BorderLayout.CENTER, ta);
-
-        frame.setVisible(true);
-    }
-
     public static void attributeImages() {
         for (int x = 0; x < 8; x++) {
             for (int y = 0; y < 8; y++) {
@@ -96,7 +61,6 @@ public class GUI {
                         if(pieceAfil == PieceInfo.BLACK) b[x][y].setIcon(applyResizedImageToButton(board.blackPawn, b[x][y]));
                         break;
                     default:
-                        // this is probably going to only be blank
                         b[x][y].setIcon(applyResizedImageToButton(board.blank, b[x][y]));
                         break;
                 }
@@ -128,6 +92,7 @@ public class GUI {
             }
         }
     }
+
     // TODO!!!: FIX THE FACT THAT GAMESCREEN CAN BE EXITED WITH THE TOP-RIGHT CLOSE BUTTON AND NOT ACTUALLY RETURN TO THE MAIN MENU
     // TODO: Fix this method, this probably isn't the best way to do this, uhh prototype blah blah blah.
     public static void gameScreen(int _width, int _height) { // probably won't need the window name unless we want to affix server sided stuff to it
@@ -175,6 +140,16 @@ public class GUI {
         gameFrame.pack();
         gameFrame.setVisible(true);
         attributeImages();
+    }
+
+    public static void optionsMenu(int _width, int _height) { // I don't think these variables are actually needed
+        JFrame optionsFrame = new JFrame("Options");
+        optionsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Might need to change to hide while we update settings files in the background
+        optionsFrame.setSize(_width, _height);
+
+
+
+        optionsFrame.setVisible(true);
     }
 
     public static void imageTesting(int _width, int _height) {
@@ -243,12 +218,6 @@ public class GUI {
         mainMenuFrame.setVisible(true); // could probably make this separate if more calls are required before setting frame visible
     }
 
-    private static void createBaseFrame() { //this isn't implemented correctly.
-        JFrame frame = new JFrame(title);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(width, height);
-    }
-
     public static void setTitle(String _title) { title = _title; }
     public static String getTitle() { return title; }
 
@@ -271,6 +240,7 @@ public class GUI {
         }
         return location;
     }
+
     private static boolean pieceSelected = false;
     //TODO: Figure out implementation to discover if the selected piece is movable by the current player
     //TODO: Also figure out a good way to store 4 ints as movement data eg: oldX, oldY, newX, newY
@@ -310,7 +280,7 @@ public class GUI {
                     break;
                 case "Options":
                     // Obviously this will eventually be the Option menu with random included options
-                    imageTesting(width, height);
+                    optionsMenu(width, height);
                     break;
                 case "Exit Game":
                     System.exit(0); // "Safely" exit the program
