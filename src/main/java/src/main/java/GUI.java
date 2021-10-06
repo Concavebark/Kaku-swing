@@ -23,9 +23,13 @@ public class GUI {
     public static String pOneString = "sugma";//these will be updated with values after options are implemented
     public static String pTwoString = "ligma";
 
-    public static Color boardColorA = Color.WHITE;
-    public static Color boardColorB = Color.BLACK;
-    public static Color highlightColor = Color.CYAN;
+    //public static Color boardColorA = Color.WHITE;
+    //public static Color boardColorB = Color.BLACK;
+    //public static Color highlightColor = Color.CYAN;
+
+    public static Color boardColorA = new Color((int)(saveLoadHandler.readFromSaveFile("colorA")));
+    public static Color boardColorB = new Color((int)(saveLoadHandler.readFromSaveFile("colorB")));
+    public static Color highlightColor = new Color((int)(saveLoadHandler.readFromSaveFile("colorH")));
 
     private static JButton[][] b = new JButton[8][8];
     private static ArrayList<Integer> moveData = new ArrayList<Integer>(4);
