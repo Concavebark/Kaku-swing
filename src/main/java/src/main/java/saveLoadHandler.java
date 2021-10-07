@@ -53,7 +53,7 @@ public class saveLoadHandler {
         }
     }
 
-    public static Object readFromSaveFile(String index){
+    public static String readFromSaveFile(String index){
 
         JSONParser parser = new JSONParser();
         JSONObject obj = new JSONObject();
@@ -85,7 +85,7 @@ public class saveLoadHandler {
             System.out.println("An unknown error occured when reading settings.json.");
         }
 
-        return obj.get(index);
+        return obj.get(index).toString();
     }
 
     public static int generateRGBCode(int r, int g, int b){

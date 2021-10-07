@@ -27,9 +27,9 @@ public class GUI {
     //public static Color boardColorB = Color.BLACK;
     //public static Color highlightColor = Color.CYAN;
 
-    public static Color boardColorA = new Color((int)(saveLoadHandler.readFromSaveFile("colorA")));
-    public static Color boardColorB = new Color((int)(saveLoadHandler.readFromSaveFile("colorB")));
-    public static Color highlightColor = new Color((int)(saveLoadHandler.readFromSaveFile("colorH")));
+    public static Color boardColorA = new Color(Integer.parseInt((saveLoadHandler.readFromSaveFile("colorA"))));
+    public static Color boardColorB = new Color(Integer.parseInt((saveLoadHandler.readFromSaveFile("colorB"))));
+    public static Color highlightColor = new Color(Integer.parseInt((saveLoadHandler.readFromSaveFile("colorH"))));
 
     private static JButton[][] b = new JButton[8][8];
     private static ArrayList<Integer> moveData = new ArrayList<Integer>(4);
