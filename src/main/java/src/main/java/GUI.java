@@ -22,10 +22,14 @@ public class GUI {
 
     public static String pOneString = "sugma";//these will be updated with values after options are implemented
     public static String pTwoString = "ligma";
+    public static JLabel playerOneLabel;
+    public static JLabel playerTwoLabel;
+    public static boolean turnWhite = true;
 
     //public static Color boardColorA = Color.WHITE;
     //public static Color boardColorB = Color.BLACK;
     //public static Color highlightColor = Color.CYAN;
+    public static Color turnIndicatorColor = Color.GREEN;
 
     public static Color boardColorA = new Color(Integer.parseInt((saveLoadHandler.readFromSaveFile("colorA"))));
     public static Color boardColorB = new Color(Integer.parseInt((saveLoadHandler.readFromSaveFile("colorB"))));
@@ -39,8 +43,6 @@ public class GUI {
             for (int y = 0; y < 8; y++) {
                 PieceInfo pieceAfil = board.getPiece(x,y).getAffiliation();
                 PieceInfo pieceType = board.getPiece(x,y).getType();
-                Piece piece = board.getPiece(x,y);
-                Dimension buttonSize = b[x][y].getSize();
                 switch(pieceType) {
                     case ROOK:
                         b[x][y].setIcon(applyResizedImageToButton((pieceAfil == PieceInfo.WHITE ? board.whiteRook : board.blackRook), b[x][y]));
@@ -76,6 +78,7 @@ public class GUI {
     }
 
     public static void createCheckerBoard(JPanel checkerBoardPanel) {
+        turnWhite = true;
         board = new Board();
         checkerBoardPanel.setLayout(new GridLayout(8,8));
         for (int x = 0; x < 8; x++) {
@@ -98,9 +101,8 @@ public class GUI {
         gameFrame = new JFrame("In-Game");
         JPanel checkerBoardPanel = new JPanel();
         checkerBoardPanel.setPreferredSize(new Dimension(width-100, width-100)); //using a single variable here to try to make sure the checkerboard is a square
-        JPanel exteriorPanel = new JPanel(); // will need a specific layout that i'll need to look into later
+        JPanel exteriorPanel = new JPanel();
         exteriorPanel.setBorder(new EmptyBorder(10,10,10,10));
-        //exteriorPanel.setPreferredSize(new Dimension(width, height));
         gameFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Disposes assets on close but doesn't close the program, hoping that this clears memory like I think it should.
         gameFrame.setSize(width, height); // PLEASE CHANGE THE SIZING SET HERE THIS SHOULDN'T MAKE IT PAST TESTING
 
@@ -109,10 +111,10 @@ public class GUI {
         exteriorPanel.setLayout(gonk);
 
         JButton quitGameButton = new JButton("Quit");
-        JLabel playerOneLabel = new JLabel(pOneString); //obviously playerOneLabel and playerTwoLabel will be changed later
-        JLabel playerTwoLabel = new JLabel(pTwoString); //Use color to indicate who has the turn
+        playerOneLabel = new JLabel(pOneString); //obviously playerOneLabel and playerTwoLabel will be changed later
+        playerTwoLabel = new JLabel(pTwoString); //Use color to indicate who has the turn
 
-        playerOneLabel.setForeground(Color.GREEN);
+        playerOneLabel.setForeground(turnIndicatorColor);
 
         quitGameButton.addActionListener(new ButtonClickListener()); //kill this window
 
@@ -145,12 +147,8 @@ public class GUI {
         JFrame optionsFrame = new JFrame("Options");
         optionsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Might need to change to hide while we update settings files in the background
         optionsFrame.setSize(_width, _height);
-        /*
-         *  TODO: User should be allowed to set their own piece icons and board colors,
-         *   also should be able to change the move highlight to whatever they want
-         */
+
         JPanel optionsPanel = new JPanel(); // should probably use gridBag but idfk rn
-        JPanel colorPanel = new JPanel();
 
         JButton colorChangeA = new JButton("Change ColorA");
         JButton colorChangeB = new JButton("Change ColorB");
@@ -160,7 +158,6 @@ public class GUI {
         colorChangeB.addActionListener(new colorStuffListener());
         highlightChange.addActionListener(new colorStuffListener());
 
-
         optionsPanel.add(colorChangeA);
         optionsPanel.add(colorChangeB);
         optionsPanel.add(highlightChange);
@@ -168,27 +165,7 @@ public class GUI {
         optionsFrame.setVisible(true);
     }
 
-    public static void imageTesting(int _width, int _height) {
-        JFrame testingFrame = new JFrame("Sugma");
-        testingFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        testingFrame.setSize(_width, _height);
-
-        //ImageIcon whiteRook = imgHandler.getSimpleImage("/res/whiteRook.jpg");
-        ImageIcon whiteRook = new ImageIcon("res/whiteRook.jpg");
-
-
-        int w = whiteRook.getIconWidth();
-        int h = whiteRook.getIconHeight();
-
-        JButton testButt = new JButton(whiteRook);
-        testButt.setBounds(40, 80, w/8, h/8);
-
-        testingFrame.add(testButt);
-        testingFrame.setVisible(true);
-    }
-
     public static void genMainMenu(String _MainMenuTitle, int _width, int _height) {
-        // should have just a few buttons, start, quit, probably something like an options menu
 
         mainMenuFrame = new JFrame(_MainMenuTitle);
         setTitle(_MainMenuTitle); // should be done differently, sloppy code.
@@ -261,16 +238,22 @@ public class GUI {
             String command = e.getActionCommand();
             switch (command) {
                 case "Change ColorA" -> {
-                    Color initialColor = Color.WHITE;
+                    Color initialColor = boardColorA;
                     boardColorA = JColorChooser.showDialog(this, "Select a Color", initialColor);
+
+                    saveLoadHandler.writeToSaveFile("colorA", String.valueOf(saveLoadHandler.generateRGBCode(boardColorA.getRed(), boardColorA.getGreen(), boardColorA.getBlue())));
                 }
                 case "Change ColorB" -> {
-                    Color initialColor = Color.BLACK;
+                    Color initialColor = boardColorB;
                     boardColorB = JColorChooser.showDialog(this, "Select a Color", initialColor);
+
+                    saveLoadHandler.writeToSaveFile("colorB", String.valueOf(saveLoadHandler.generateRGBCode(boardColorB.getRed(), boardColorB.getGreen(), boardColorB.getBlue())));
                 }
                 case "Change Highlight Color" -> {
-                    Color initialColor = Color.CYAN;
+                    Color initialColor = highlightColor;
                     highlightColor = JColorChooser.showDialog(this, "Select a Color", initialColor);
+
+                    saveLoadHandler.writeToSaveFile("colorH", String.valueOf(saveLoadHandler.generateRGBCode(highlightColor.getRed(), highlightColor.getGreen(), highlightColor.getBlue())));
                 }
             }
 
@@ -285,21 +268,43 @@ public class GUI {
             JButton button = (JButton) e.getSource(); // TODO: RIGHT HERE BUDD
             boolean playerHasMoved = false;
             if (!pieceSelected) {
-                moveData.add(findCoordsFromButton(button).get(0));
-                moveData.add(findCoordsFromButton(button).get(1));
-                pieceSelected = true;
+                if (turnWhite && board.getPiece(findCoordsFromButton(button).get(0), findCoordsFromButton(button).get(1)).getAffiliation() == PieceInfo.WHITE) {
+                    moveData.add(findCoordsFromButton(button).get(0));
+                    moveData.add(findCoordsFromButton(button).get(1));
+                    pieceSelected = true;
+                } else if (!turnWhite && board.getPiece(findCoordsFromButton(button).get(0), findCoordsFromButton(button).get(1)).getAffiliation() == PieceInfo.BLACK) {
+                    moveData.add(findCoordsFromButton(button).get(0));
+                    moveData.add(findCoordsFromButton(button).get(1));
+                    pieceSelected = true;
+                } else { pieceSelected = false; }
 
-                for(int y = 0; y < 8; y++)
-                    for(int x = 0; x < 8; x++)
-                        if(board.isMoveValid(moveData.get(0), moveData.get(1), y, x) && board.getPiece(moveData.get(0), moveData.get(1)).getType() != PieceInfo.BLANK)
-                            b[y][x].setBackground(highlightColor);
+                if (pieceSelected) {
+                    for (int y = 0; y < 8; y++)
+                        for (int x = 0; x < 8; x++)
+                            if (board.isMoveValid(moveData.get(0), moveData.get(1), y, x) && board.getPiece(moveData.get(0), moveData.get(1)).getType() != PieceInfo.BLANK)
+                                b[y][x].setBackground(highlightColor);
+                }
 
             } else if (pieceSelected) {
                 moveData.add(findCoordsFromButton(button).get(0));
                 moveData.add(findCoordsFromButton(button).get(1)); // then use this to move piece in the Board class
                 //TODO: this currently works as movement and everything, but really should change it to be something that the player can actually see and understand
-                System.out.println("MOVEMENT RETURN CODE: " +board.movePiece(moveData.get(0), moveData.get(1), moveData.get(2), moveData.get(3)));
-                playerHasMoved = true;
+                if (board.movePiece(moveData.get(0), moveData.get(1), moveData.get(2), moveData.get(3)) == 0) {
+                    playerHasMoved = true;
+                    if (turnWhite) {
+                        playerTwoLabel.setForeground(Color.BLACK);
+                        playerOneLabel.setForeground(turnIndicatorColor);
+                    } else {
+                        playerOneLabel.setForeground(Color.BLACK);
+                        playerTwoLabel.setForeground(turnIndicatorColor);
+                    }
+                } else if (board.movePiece(moveData.get(0), moveData.get(1), moveData.get(2), moveData.get(3)) == 2) {
+                    //white win
+                } else if (board.movePiece(moveData.get(0), moveData.get(1), moveData.get(2), moveData.get(3)) == 3) {
+                    //black win
+                } else {
+                    moveData.clear();
+                }
                 pieceSelected = false;
 
                 for(int y = 0; y < 8; y++)
@@ -307,10 +312,10 @@ public class GUI {
                         b[y][x].setBackground(((y + x) % 2 == 0 ? boardColorA : boardColorB));
             }
             if (playerHasMoved) {
+                turnWhite = !turnWhite; // switch turns lol
                 moveData.clear(); //clears all move data so that moveData can be reused.
                 pieceSelected = false;
-                attributeImages();//TODO: MAKE SURE THIS WORKS, COULD BE AN EASY WAY TO UPDATE THE BOARD JUST AFTER A PLAYER MAKES A MOVE
-                // THIS SHOULD ALSO BE THE POINT WHERE THE "TURN" GETS SWITCHED OVER, AND I JUST REALIZED I DON'T HAVE TURNS IMPLEMENTED YET
+                attributeImages();
             }
         }
     }
@@ -322,7 +327,6 @@ public class GUI {
             switch (command) {
                 case "Start Game":
                     gameScreen(width, height); // run important logic for game start here
-                    mainMenuFrame.setVisible(false);
                     break;
                 case "Options":
                     // Obviously this will eventually be the Option menu with random included options
@@ -332,7 +336,6 @@ public class GUI {
                     System.exit(0); // "Safely" exit the program
                     break;
                 case "Quit":
-                    mainMenuFrame.setVisible(true);
                     gameFrame.dispose();
                     break;
                 default:
