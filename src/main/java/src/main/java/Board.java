@@ -4,10 +4,6 @@ import javax.swing.*;
 
 import static java.lang.Math.abs;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Objects;
-
 public class Board {
 
     //TODO: LOOK INTO A METHOD OF SELECTING IMAGES ELSEWHERE ON THE COMPUTER SO THE USER CAN USE THEIR OWN CHESS PIECES
