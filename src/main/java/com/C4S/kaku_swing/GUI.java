@@ -1,4 +1,4 @@
-package src.main.java;
+package com.C4S.kaku_swing;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

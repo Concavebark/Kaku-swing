@@ -1,12 +1,8 @@
-package src.main.java;
+package com.C4S.kaku_swing;
 
 import javax.swing.*;
 
 import static java.lang.Math.abs;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Objects;
 
 public class Board {
 
@@ -51,9 +47,18 @@ public class Board {
 
     public int movePiece(int oldY, int oldX, int newY, int newX){
 
+        /* Return codes:
+        0: The move was made.
+        1: The move failed.
+        2: White wins.
+        3: Black wins.
+        4: Error.
+         */
+
         Piece oldPiece = boardState[oldY][oldX];
 
         if(oldPiece.getType() != PieceInfo.BLANK && isMoveValid(oldY, oldX, newY, newX)){
+
             System.out.println("Applying movement");
             Piece[][] tempBoard = boardState;
             tempBoard[oldY][oldX] = new Piece();
@@ -118,26 +123,18 @@ public class Board {
      * so we can use them to move the piece **/
     static final int[][] validLocalCoords = {{-1,2}, {1,2}, {2,1}, {2,-1}, {1,-2}, {-1,-2}, {-2,-1}, {-2,1}}; //This really shouldn't ever be changed
 
-    private ArrayList<ArrayList<Integer>> calcValidKnightMovesArrLst(int oldX, int oldY) {
-        //tempLocalCoords = validLocalCoords;
-        ArrayList<Integer> currentLoc = new ArrayList<>(Arrays.asList(oldX,oldY));
-        ArrayList<ArrayList<Integer>> validGlobalCoords = new ArrayList<>();
-        ArrayList<Integer> tempLoc;
-        for (int i = 0; i < validLocalCoords.length; i++) { // NOTE: Leaving tempLocalCoords in just in case as I thought I might previously need it although the current setup, using validLocalCoords seems to work just fine in testing
-            tempLoc = new ArrayList<Integer>();
-            for(int a = 0; a< validLocalCoords[i].length; a++) {
-                int tempIntStorage = validLocalCoords[i][a];
-                int currentLocIntStorage = currentLoc.get(a);
-                int compareLocWValid = currentLocIntStorage + tempIntStorage;
-                if (compareLocWValid >= 0 && compareLocWValid <= 7) {
-                    tempLoc.add(validLocalCoords[i][a] + currentLoc.get(a));
-                }
-            }
-            if (tempLoc.size() == 2) {
-                validGlobalCoords.add(tempLoc);
-            }
-        }
-        return validGlobalCoords;
+    private boolean isKnightMoveValid(int oldX, int oldY, int newX, int newY) { // TODO: this is more efficient than the old method but i think there are bugs waiting to happen
+
+        int[][] validLocalCoords = {{-1, 2}, {1, 2}, {2, 1}, {2, -1}, {1, -2}, {-1, -2}, {-2, -1}, {-2, 1}};
+        int[] coordDiff = {oldY - newY, oldX - newX};
+
+        boolean flag = false;
+
+        for(int i = 0; i < validLocalCoords.length; i++)
+            if(coordDiff[0] == validLocalCoords[i][0] && coordDiff[1] == validLocalCoords[i][1])
+                flag = true;
+
+        return flag;
     }
 
     public boolean isMoveValid(int oldY, int oldX, int newY, int newX) {
@@ -189,22 +186,8 @@ public class Board {
                     break;
                 case KNIGHT:
                     // has the weird L moves, can go over enemies and friendlies
-                    ArrayList<Integer> userSel = new ArrayList<>(Arrays.asList(newX,newY));
-                    ArrayList<ArrayList<Integer>> locStorage;
-                    locStorage = calcValidKnightMovesArrLst(oldX,oldY);
-                    boolean validUserSelection = false;
-                    for (int i = 0; i < locStorage.size(); i++) {
-                        if (Objects.equals(locStorage.get(i).get(0), userSel.get(0)) && Objects.equals(locStorage.get(i).get(1), userSel.get(1))) {
-                            validUserSelection = true;
-                            if (boardState[locStorage.get(i).get(1)][locStorage.get(i).get(0)].getAffiliation() == boardState[oldY][oldX].getAffiliation()) { //check if both pieces are of same affiliation, therefore making the move invalid
-                                return false;
-                            }
-                        }
-                    }
-                    if (!validUserSelection) {
-                        return false; //this is just the flag that is needed to ensure we check through all valid knight move locations and make sure the user selected a spot the knight can legally go to
-                    }
-                    locStorage.clear(); // Doesn't appear to be necessary, but I'm leaving it in to MAKE SURE nothing gets messed up, also helps with memory usage
+                    if(!isKnightMoveValid(oldX, oldY, newX, newY))
+                        return false;
                     break;
                 case BISHOP:
                     if(Math.abs(oldX-newX) != Math.abs(oldY-newY))
@@ -216,7 +199,7 @@ public class Board {
                     checkX = oldX + directionX;
                     checkY = oldY + directionY;
 
-                    imLosingMyMind = true;
+                    imLosingMyMind = true; // TODO: fix this stupid ass name
 
                     while(checkX < 8 && checkY < 8 && checkX > 0 && checkY > 0) {
 
