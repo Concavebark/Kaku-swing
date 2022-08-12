@@ -1,4 +1,4 @@
-package src.main.java;
+package com.C4S.kaku_swing;
 
 import org.json.simple.*;
 import org.json.simple.parser.*;
