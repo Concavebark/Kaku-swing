@@ -1,2 +1,6 @@
 
 .idea/workspace.xml
+./target
+settings.json
+test.txt
+pom.xml
