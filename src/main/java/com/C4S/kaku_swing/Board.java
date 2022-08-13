@@ -3,7 +3,6 @@ package com.C4S.kaku_swing;
 import javax.swing.*;
 
 import java.util.Vector;
-
 import static java.lang.Math.abs;
 
 public class Board {
@@ -130,18 +129,14 @@ public class Board {
         return 1; // the pieces were of the same type
     }
 
-    private boolean isKnightMoveValid(int oldX, int oldY, int newX, int newY) { // TODO: this is more efficient than the old method but i think there are bugs waiting to happen
+    private boolean isKnightMoveValid(int oldX, int oldY, int newX, int newY) { // this is even simpler than before. fingers crossed i didn't fuck it up
 
-        int[][] validLocalCoords = {{-1, 2}, {1, 2}, {2, 1}, {2, -1}, {1, -2}, {-1, -2}, {-2, -1}, {-2, 1}};
-        int[] coordDiff = {oldY - newY, oldX - newX};
+        int[][] validCoords = {{1, 2}, {2, 1}};
+        int[] coordDiff = {abs(oldY - newY), abs(oldX - newX)};
 
-        boolean flag = false;
-
-        for(int i = 0; i < validLocalCoords.length; i++)
-            if(coordDiff[0] == validLocalCoords[i][0] && coordDiff[1] == validLocalCoords[i][1])
-                flag = true;
-
-        return flag;
+        if ((coordDiff[0] == 1 && coordDiff[1] == 2) || (coordDiff[0] == 2 && coordDiff[1] == 1))
+            return true;
+        return false;
     }
 
     public boolean isMoveValid(int oldY, int oldX, int newY, int newX) {
@@ -460,7 +455,41 @@ public class Board {
 
         Vector<String> history = new Vector<String>();
 
-        // TODO: parse this shit
+        String token = "";
+        int turn = 1;
+
+        for(int i = 0; i < PGN.length(); i++){
+
+            token += PGN.charAt(i);
+
+            try{
+
+                Integer.parseInt(token);
+
+                // this should be unreachable unless the token was ONLY a number
+
+                if(PGN.charAt(i + 1) == '-'){ // is this a victory?
+
+                    token += PGN.charAt(i+1) + PGN.charAt(i + 2);
+
+                    history.add(turn - 1, history.get(turn - 1) + token);
+                    token = "";
+                    break; // this was a victory. there are no more turns.
+                }
+
+                i++; // skip the period
+                token = ""; // clear the token
+                continue;
+            }catch(NumberFormatException e){
+
+                if(PGN.charAt(i) == ' '){
+
+                    history.add(turn - 1, history.get(turn - 1) + token);
+                    token = "";
+                    continue;
+                }
+            }
+        }
 
         return history;
     }
