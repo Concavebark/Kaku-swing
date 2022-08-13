@@ -7,6 +7,12 @@
     <groupId>org.example</groupId>
     <artifactId>kaku</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
     <dependencies>
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
@@ -17,6 +23,11 @@
             <groupId>net.harawata</groupId>
             <artifactId>appdirs</artifactId>
             <version>1.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.whicc</groupId>
+            <artifactId>kaku</artifactId>
+            <version>stable</version>
         </dependency>
     </dependencies>
 

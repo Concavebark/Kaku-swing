@@ -1,5 +1,6 @@
 package com.C4S.kaku_swing;
 
+import javax.imageio.stream.ImageInputStream;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -7,11 +8,33 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import net.jameskoehler.kaku.*;
+
 //TODO: Think about move highlighting. Could change button color based on available moves.
 
 public class GUI {
 
     private static Board board = new Board();
+
+    /* Two ways to go about importing images for use with the GUI,
+        looping through res folder and looking for names,
+        or hardcoding, start with hardcoding
+     */
+    private static ImageIcon whiteRook = new ImageIcon("res/whiteRook.png");
+    private static ImageIcon whiteKnight = new ImageIcon("res/whiteKnight.png");
+    private static ImageIcon whiteBishop = new ImageIcon("res/whiteBishop.png");
+    private static ImageIcon whiteQueen = new ImageIcon("res/whiteQueen.png");
+    private static ImageIcon whiteKing = new ImageIcon("res/whiteKing.png");
+    private static ImageIcon whitePawn = new ImageIcon("res/whitePawn.png");
+    //--------------------------------------------------------------------------//
+    private static ImageIcon blackRook = new ImageIcon("res/blackRook.png");
+    private static ImageIcon blackKnight = new ImageIcon("res/blackKnight.png");
+    private static ImageIcon blackBishop = new ImageIcon("res/blackBishop.png");
+    private static ImageIcon blackQueen = new ImageIcon("res/blackQueen.png");
+    private static ImageIcon blackKing = new ImageIcon("res/blackKing.png");
+    private static ImageIcon blackPawn = new ImageIcon("res/blackPawn.png");
+    //------------------------------------------------------------------------//
+    private static ImageIcon blank = new ImageIcon("res/Blank.png");
 
     private static JFrame gameFrame; // Required a script-wide scope reference to the JFrame used by our game loop
     private static JFrame mainMenuFrame; // Same thing as gameFrame, this is just an easier solution instead of having to think about it.
@@ -31,9 +54,9 @@ public class GUI {
     //public static Color highlightColor = Color.CYAN;
     public static Color turnIndicatorColor = Color.GREEN;
 
-    public static Color boardColorA = new Color(Integer.parseInt((saveLoadHandler.readFromSaveFile("colorA"))));
-    public static Color boardColorB = new Color(Integer.parseInt((saveLoadHandler.readFromSaveFile("colorB"))));
-    public static Color highlightColor = new Color(Integer.parseInt((saveLoadHandler.readFromSaveFile("colorH"))));
+    public static Color boardColorA = new Color(Integer.parseInt((saveLoadHandler.readFromSettingsFile("colorA"))));
+    public static Color boardColorB = new Color(Integer.parseInt((saveLoadHandler.readFromSettingsFile("colorB"))));
+    public static Color highlightColor = new Color(Integer.parseInt((saveLoadHandler.readFromSettingsFile("colorH"))));
 
     private static JButton[][] b = new JButton[8][8];
     private static ArrayList<Integer> moveData = new ArrayList<Integer>(4);
@@ -45,25 +68,25 @@ public class GUI {
                 PieceInfo pieceType = board.getPiece(x,y).getType();
                 switch(pieceType) {
                     case ROOK:
-                        b[x][y].setIcon(applyResizedImageToButton((pieceAfil == PieceInfo.WHITE ? board.whiteRook : board.blackRook), b[x][y]));
+                        b[x][y].setIcon(applyResizedImageToButton((pieceAfil == PieceInfo.WHITE ? whiteRook : blackRook), b[x][y]));
                         break;
                     case KNIGHT:
-                        b[x][y].setIcon(applyResizedImageToButton((pieceAfil == PieceInfo.WHITE ? board.whiteKnight : board.blackKnight), b[x][y]));
+                        b[x][y].setIcon(applyResizedImageToButton((pieceAfil == PieceInfo.WHITE ? whiteKnight : blackKnight), b[x][y]));
                         break;
                     case BISHOP:
-                        b[x][y].setIcon(applyResizedImageToButton((pieceAfil == PieceInfo.WHITE ? board.whiteBishop : board.blackBishop), b[x][y]));
+                        b[x][y].setIcon(applyResizedImageToButton((pieceAfil == PieceInfo.WHITE ? whiteBishop : blackBishop), b[x][y]));
                         break;
                     case QUEEN:
-                        b[x][y].setIcon(applyResizedImageToButton((pieceAfil == PieceInfo.WHITE ? board.whiteQueen : board.blackQueen), b[x][y]));
+                        b[x][y].setIcon(applyResizedImageToButton((pieceAfil == PieceInfo.WHITE ? whiteQueen : blackQueen), b[x][y]));
                         break;
                     case KING:
-                        b[x][y].setIcon(applyResizedImageToButton((pieceAfil == PieceInfo.WHITE ? board.whiteKing : board.blackKing), b[x][y]));
+                        b[x][y].setIcon(applyResizedImageToButton((pieceAfil == PieceInfo.WHITE ? whiteKing : blackKing), b[x][y]));
                         break;
                     case PAWN:
-                        b[x][y].setIcon(applyResizedImageToButton((pieceAfil == PieceInfo.WHITE ? board.whitePawn : board.blackPawn), b[x][y]));
+                        b[x][y].setIcon(applyResizedImageToButton((pieceAfil == PieceInfo.WHITE ? whitePawn : blackPawn), b[x][y]));
                         break;
                     default:
-                        b[x][y].setIcon(applyResizedImageToButton(board.blank, b[x][y]));
+                        b[x][y].setIcon(applyResizedImageToButton(blank, b[x][y]));
                         break;
                 }
             }

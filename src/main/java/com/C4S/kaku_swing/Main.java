@@ -1,6 +1,6 @@
 package com.C4S.kaku_swing;
 
-public class Main {
+public class  Main {
 
     private static int width = 400;
     private static int height = 400;

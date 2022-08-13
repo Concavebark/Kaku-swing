@@ -113,7 +113,7 @@ public class saveLoadHandler {
         }
     }
 
-    public static String readFromSaveFile(String index){
+    public static String readFromSettingsFile(String index){
 
         JSONParser parser = new JSONParser();
         JSONObject obj = new JSONObject();
