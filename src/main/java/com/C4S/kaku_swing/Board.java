@@ -71,6 +71,8 @@ public class Board {
             int kingX = 0; // had to initialize with a value because java was pissed
             int kingY = 0;
 
+
+            // this might be improved by adding a location member variable to the Piece class, and then having a reference to each king in the board class
             for(int y = 0; y < 7; y++){ // this is bad code //TODO: Make this good code... soon(tm)
 
                 for(int x = 0; x < 7; x++){
@@ -129,16 +131,6 @@ public class Board {
         return 1; // the pieces were of the same type
     }
 
-    private boolean isKnightMoveValid(int oldX, int oldY, int newX, int newY) { // this is even simpler than before. fingers crossed i didn't fuck it up
-
-        int[][] validCoords = {{1, 2}, {2, 1}};
-        int[] coordDiff = {abs(oldY - newY), abs(oldX - newX)};
-
-        if ((coordDiff[0] == 1 && coordDiff[1] == 2) || (coordDiff[0] == 2 && coordDiff[1] == 1))
-            return true;
-        return false;
-    }
-
     public boolean isMoveValid(int oldY, int oldX, int newY, int newX) {
 
         if(oldY < 0 || oldY > 7 || oldX < 0 || oldX > 7 || newY < 0 || newY > 7 || newX < 0 || newX > 7) // verify in range
@@ -188,67 +180,21 @@ public class Board {
                     break;
                 case KNIGHT:
                     // has the weird L moves, can go over enemies and friendlies
-                    if(!isKnightMoveValid(oldX, oldY, newX, newY))
+                    int[] coordDiff = {abs(oldY - newY), abs(oldX - newX)};
+
+                    if (!(coordDiff[0] == 1 && coordDiff[1] == 2) && !(coordDiff[0] == 2 && coordDiff[1] == 1))
                         return false;
                     break;
                 case BISHOP:
-                    if(Math.abs(oldX-newX) != Math.abs(oldY-newY))
-                        return false; // x and y have the same magnitude magnitits
-                    //TODO: check to see if the equation (newX-oldX)/((newX-oldX)*-1) could just be declared above switch case and re-used
-                    directionX = Math.max(-1, Math.min(1, (oldX-newX)*-1)); // get the direction to iterate
-                    directionY = Math.max(-1, Math.min(1, (oldY-newY)*-1));
 
-                    checkX = oldX + directionX;
-                    checkY = oldY + directionY;
-
-                    imLosingMyMind = true; // TODO: fix this stupid ass name
-
-                    while(checkX < 8 && checkY < 8 && checkX > 0 && checkY > 0) {
-
-                        if (boardState[checkY][checkX].getType() != PieceInfo.BLANK && checkX != newX && checkY != newY)
-                            imLosingMyMind =  false; // Bishop cannot pass through any pieces
-
-                        if(boardState[checkY][checkX].getAffiliation() == oldPiece.getAffiliation() && checkX == newX && checkY == newY)
-                            imLosingMyMind =  false; // Bishop cannot end on a piece of the same affiliation
-
-                        if(checkX == newX)
-                            break; // Reached destination without issues
-
-                        checkX += directionX; // Iterate to next spot in path
-                        checkY += directionY;
-                    }
-
-                    if(!imLosingMyMind)
+                    if(!isDiagonalValid(oldX, oldY, newX, newY))
                         return false;
 
                     break;
                 case QUEEN:
                     if(Math.abs(oldX-newX) == Math.abs(oldY-newY)){ // angled move
 
-                        directionX = Math.max(-1, Math.min(1, (oldX-newX)*-1)); // get the direction to iterate
-                        directionY = Math.max(-1, Math.min(1, (oldY-newY)*-1));
-
-                        checkX = oldX + directionX;
-                        checkY = oldY + directionY;
-
-                        imLosingMyMind = true;
-
-                        while(checkX < 8 && checkY < 8 && checkX > 0 && checkY > 0) {
-
-                            if (boardState[checkY][checkX].getType() != PieceInfo.BLANK && checkX != newX && checkY != newY)
-                                imLosingMyMind =  false; // Bishop cannot pass through any pieces
-
-                            if(boardState[checkY][checkX].getAffiliation() == oldPiece.getAffiliation() && checkX == newX && checkY == newY)
-                                imLosingMyMind =  false; // Bishop cannot end on a piece of the same affiliation
-
-                            if(checkX == newX)
-                                break; // Reached destination without issues
-
-                            checkX += directionX; // Iterate to next spot in path
-                            checkY += directionY;
-                        }
-
-                        if(!imLosingMyMind)
+                        if(!isDiagonalValid(oldX, oldY, newX, newY))
                             return false;
                     }else{
 
@@ -375,6 +321,40 @@ public class Board {
     public void setBoardState(Piece[][] _boardState){
 
         boardState = _boardState;
+    }
+
+    private boolean isDiagonalValid(int oldX, int oldY, int newX, int newY){
+
+        int directionX;
+        int directionY;
+        int checkX;
+        int checkY;
+
+        if(Math.abs(oldX-newX) != Math.abs(oldY-newY))
+            return false; // x and y have the same magnitude
+
+        directionX = Math.max(-1, Math.min(1, (oldX-newX)*-1)); // get the direction to iterate
+        directionY = Math.max(-1, Math.min(1, (oldY-newY)*-1));
+
+        checkX = oldX + directionX;
+        checkY = oldY + directionY;
+
+        while(checkX < 8 && checkY < 8 && checkX > 0 && checkY > 0) {
+
+            if (boardState[checkY][checkX].getType() != PieceInfo.BLANK && checkX != newX && checkY != newY)
+                return false;
+
+            if(boardState[checkY][checkX].getAffiliation() == boardState[oldX][oldY].getAffiliation() && checkX == newX && checkY == newY)
+                return false;
+
+            if(checkX == newX)
+                return true; // Reached destination without issues
+
+            checkX += directionX; // Iterate to next spot in path
+            checkY += directionY;
+        }
+        // note: this may need to be return false; testing needed
+        return true;
     }
 
     private String convertMoveToPGN(Piece movedPiece, int newX, int newY){
