@@ -241,19 +241,19 @@ public class GUI {
                     Color initialColor = boardColorA;
                     boardColorA = JColorChooser.showDialog(this, "Select a Color", initialColor);
 
-                    saveLoadHandler.writeToSaveFile("colorA", String.valueOf(saveLoadHandler.generateRGBCode(boardColorA.getRed(), boardColorA.getGreen(), boardColorA.getBlue())));
+                    saveLoadHandler.writeToSettingsFile("colorA", String.valueOf(saveLoadHandler.generateRGBCode(boardColorA.getRed(), boardColorA.getGreen(), boardColorA.getBlue())));
                 }
                 case "Change ColorB" -> {
                     Color initialColor = boardColorB;
                     boardColorB = JColorChooser.showDialog(this, "Select a Color", initialColor);
 
-                    saveLoadHandler.writeToSaveFile("colorB", String.valueOf(saveLoadHandler.generateRGBCode(boardColorB.getRed(), boardColorB.getGreen(), boardColorB.getBlue())));
+                    saveLoadHandler.writeToSettingsFile("colorB", String.valueOf(saveLoadHandler.generateRGBCode(boardColorB.getRed(), boardColorB.getGreen(), boardColorB.getBlue())));
                 }
                 case "Change Highlight Color" -> {
                     Color initialColor = highlightColor;
                     highlightColor = JColorChooser.showDialog(this, "Select a Color", initialColor);
 
-                    saveLoadHandler.writeToSaveFile("colorH", String.valueOf(saveLoadHandler.generateRGBCode(highlightColor.getRed(), highlightColor.getGreen(), highlightColor.getBlue())));
+                    saveLoadHandler.writeToSettingsFile("colorH", String.valueOf(saveLoadHandler.generateRGBCode(highlightColor.getRed(), highlightColor.getGreen(), highlightColor.getBlue())));
                 }
             }
 
