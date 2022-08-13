@@ -2,6 +2,8 @@ package com.C4S.kaku_swing;
 
 import javax.swing.*;
 
+import java.util.Vector;
+
 import static java.lang.Math.abs;
 
 public class Board {
@@ -24,7 +26,10 @@ public class Board {
 
     public ImageIcon blank = new ImageIcon("res/Blank.png");
 
-    private Piece[][] boardState = new Piece[8][8];
+    private Piece[][] boardState; // no need to give an initial value since both constructors would override it anyways
+    private Piece[][] tempBoardState = new Piece[8][8];
+
+    private Vector<String> moveHistory = new Vector<String>();
 
     public Board() {
 
@@ -60,9 +65,9 @@ public class Board {
         if(oldPiece.getType() != PieceInfo.BLANK && isMoveValid(oldY, oldX, newY, newX)){
 
             System.out.println("Applying movement");
-            Piece[][] tempBoard = boardState;
-            tempBoard[oldY][oldX] = new Piece();
-            tempBoard[newY][newX] = oldPiece;
+            tempBoardState = boardState;
+            tempBoardState[oldY][oldX] = new Piece();
+            tempBoardState[newY][newX] = oldPiece;
 
             int kingX = 0; // had to initialize with a value because java was pissed
             int kingY = 0;
@@ -79,12 +84,17 @@ public class Board {
                 }
             }
 
-            if(!isKingInCheck(tempBoard, oldPiece.getAffiliation(), kingX, kingY)){
+            if(!isKingInCheck(tempBoardState, oldPiece.getAffiliation(), kingX, kingY)){
 
                 oldPiece.setHasMoved(true);
 
                 boardState[oldY][oldX] = new Piece();
                 boardState[newY][newX] = oldPiece;
+
+                if(oldPiece.getAffiliation() == PieceInfo.WHITE) // this makes it easier to convert to normal PGN notation later
+                    moveHistory.add(convertMoveToPGN(oldPiece, newX, newY));
+                else
+                    moveHistory.add(moveHistory.size() -1, moveHistory.get(moveHistory.size() - 1) + " " + convertMoveToPGN(oldPiece, newX, newY));
 
                 return 0; //was previously true
             }
@@ -106,22 +116,19 @@ public class Board {
                 switch(boardState[kingY][kingX].getAffiliation()){
 
                     case BLACK: // black is in checkmate; white won
+                        moveHistory.add("1-0");
                         return 2;
                     case WHITE: // white is in checkmate; black won
+                        moveHistory.add("0-1");
                         return 3;
                 }
             }
 
-            return 1; //was false
+            return 1; // no checks passed
         }
 
-        return 1; //was false
+        return 1; // the pieces were of the same type
     }
-
-    /**validLocalCoords is specific for Knight move calculation, it's a list of where a Knight piece can legally move on the board,
-     * and this method is used to take the coordinates from a local perspective and globalize them,
-     * so we can use them to move the piece **/
-    static final int[][] validLocalCoords = {{-1,2}, {1,2}, {2,1}, {2,-1}, {1,-2}, {-1,-2}, {-2,-1}, {-2,1}}; //This really shouldn't ever be changed
 
     private boolean isKnightMoveValid(int oldX, int oldY, int newX, int newY) { // TODO: this is more efficient than the old method but i think there are bugs waiting to happen
 
@@ -153,12 +160,12 @@ public class Board {
             int distanceX = abs(newX - oldX);
             int distanceY = abs(newY - oldY);
 
-            int directionX; // had to instantiate these here because IntelliJ doesn't understand how scope works
+            int directionX;
             int directionY;
             int checkX;
             int checkY;
 
-            boolean imLosingMyMind = true;
+            boolean imLosingMyMind = true; // ???
             // the entire switch case is dedicated to exposing that a move is illegal, otherwise it'll be treated as legal
             switch(oldPiece.getType()){
 
@@ -373,5 +380,88 @@ public class Board {
     public void setBoardState(Piece[][] _boardState){
 
         boardState = _boardState;
+    }
+
+    private String convertMoveToPGN(Piece movedPiece, int newX, int newY){
+
+        String PGN = "";
+
+        switch(movedPiece.getType()){ // first part of notation is the piece moved. pawns have no notation here.
+
+            case KING:
+                PGN += "K";
+                break;
+            case PAWN:
+                break;
+            case ROOK:
+                PGN += "R";
+                break;
+            case QUEEN:
+                PGN += "Q";
+                break;
+            case BISHOP:
+                PGN += "B";
+                break;
+            case KNIGHT:
+                PGN += "N";
+                break;
+            default:
+                PGN += "Uh oh! Looks like someone fucked up!";
+                break;
+        }
+
+        switch(newX){
+
+            case 0:
+                PGN += "a";
+                break;
+            case 1:
+                PGN += "b";
+                break;
+            case 2:
+                PGN += "c";
+                break;
+            case 3:
+                PGN += "d";
+                break;
+            case 4:
+                PGN += "e";
+                break;
+            case 5:
+                PGN += "f";
+                break;
+            case 6:
+                PGN += "g";
+                break;
+            case 7:
+                PGN += "h";
+                break;
+            default:
+                PGN += "This should not be possible.";
+                break;
+        }
+
+        PGN += Integer.toString((newY * -1) + 8); // this inverts the numbers so they fit the actual chess board
+
+        return PGN;
+    }
+
+    private String convertMoveHistoryToPGN(String[] history){
+
+        String PGN = "";
+
+        for(int i = 0; i < history.length; i++)
+            PGN += Integer.toString(i + 1) + "." + history[i] + " ";
+
+        return PGN;
+    }
+
+    private Vector<String> convertPGNToMoveHistory(String PGN){
+
+        Vector<String> history = new Vector<String>();
+
+        // TODO: parse this shit
+
+        return history;
     }
 }
