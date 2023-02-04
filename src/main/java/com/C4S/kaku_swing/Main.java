@@ -7,6 +7,8 @@ public class  Main {
 
     public static void main(String[] args) { // could probably do some shitty logic here's with how I've implemented GUI
 
-        GUI.genMainMenu("Kaku-swing Chess", width, height);
+        new MainMenu("Kaku-swing Chess", width, height);
+        LogWriter logWriter = new LogWriter();
+        logWriter.logInfo("Launching Kaku-swing Chess");
     }
 }

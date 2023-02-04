@@ -13,7 +13,30 @@ public class optionsMenu {
     private JButton colorChangeA, colorChangeB, highlightChange;
 
     /***
-     *
+     * OptionsMenu is a generated JFrame class that displays options for Swing variation of Kaku the empty param call is set up to be easy to use quickly for testing purposes and is not designed to be used for full time use
+     */
+    public optionsMenu() {
+        optionsFrame.setTitle(optionsFrameTitle);
+        optionsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        optionsFrame.setSize(400, 400);
+
+        colorChangeA = new JButton("Change ColorA");
+        colorChangeB = new JButton("Change ColorB");
+        highlightChange = new JButton("Change Highlight Color");
+
+        colorChangeA.addActionListener(new colorListener());
+        colorChangeB.addActionListener(new colorListener());
+        highlightChange.addActionListener(new colorListener());
+
+        optionsPanel.add(colorChangeA);
+        optionsPanel.add(colorChangeB);
+        optionsPanel.add(highlightChange);
+        optionsFrame.add(optionsPanel);
+
+        optionsFrame.setVisible(true);
+    }
+    /***
+     * OptionsMenu is a generated JFrame class that displays options for Swing variation of Kaku
      * @param optionsFrameTitle set title of the Options Menu JFrame
      * @param closeOperation set the JFrame's default close operation ( JFrame.DISPOSE_ON_CLOSE )
      * @param width set the width of the JFrame
@@ -104,4 +127,5 @@ public class optionsMenu {
     public void setHighlightChange(JButton highlightChange) {
         this.highlightChange = highlightChange;
     }
+
 }

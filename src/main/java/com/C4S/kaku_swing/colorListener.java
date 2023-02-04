@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 
 import static com.C4S.kaku_swing.GUI.*;
 
-public class colorStuffListener extends Component implements ActionListener {
+public class colorListener extends Component implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         switch (command) {

@@ -36,7 +36,7 @@ public class GUI {
     //------------------------------------------------------------------------//
     private static ImageIcon blank = new ImageIcon("res/Blank.png");
 
-    private static JFrame gameFrame; // Required a script-wide scope reference to the JFrame used by our game loop
+    public static JFrame gameFrame; // Required a script-wide scope reference to the JFrame used by our game loop
     private static JFrame mainMenuFrame; // Same thing as gameFrame, this is just an easier solution instead of having to think about it.
 
     public static String title = "Err: Title not reassigned";
@@ -166,73 +166,6 @@ public class GUI {
         attributeImages();
     }
 
-//    public static void optionsMenu(int _width, int _height) { // I don't think these variables are actually needed
-//        JFrame optionsFrame = new JFrame("Options");
-//        optionsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Might need to change to hide while we update settings files in the background
-//        optionsFrame.setSize(_width, _height);
-//
-//        JPanel optionsPanel = new JPanel(); // should probably use gridBag but idfk rn
-//
-//        JButton colorChangeA = new JButton("Change ColorA");
-//        JButton colorChangeB = new JButton("Change ColorB");
-//        JButton highlightChange = new JButton("Change Highlight Color");
-//
-//        colorChangeA.addActionListener(new colorStuffListener());
-//        colorChangeB.addActionListener(new colorStuffListener());
-//        highlightChange.addActionListener(new colorStuffListener());
-//
-//        optionsPanel.add(colorChangeA);
-//        optionsPanel.add(colorChangeB);
-//        optionsPanel.add(highlightChange);
-//        optionsFrame.add(optionsPanel);
-//        optionsFrame.setVisible(true);
-//    }
-
-    public static void genMainMenu(String _MainMenuTitle, int _width, int _height) {
-
-        mainMenuFrame = new JFrame(_MainMenuTitle);
-        setTitle(_MainMenuTitle); // should be done differently, sloppy code.
-        setWidth(_width); // could probably be done outside of method call. eg: make these calls prior to calling genMainMenu
-        setHeight(_height); // same issue as with the setWidth() call
-        mainMenuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        mainMenuFrame.setSize(width, height);
-
-        GridBagLayout grid = new GridBagLayout();
-        GridBagConstraints gbc = new GridBagConstraints();
-        mainMenuFrame.setLayout(grid);
-        GridBagLayout layout = new GridBagLayout();
-        mainMenuFrame.setLayout(layout); //two setLayout calls idk about that one chief
-
-        JLabel gameLabel = new JLabel("Kaku-swing Chess");
-        JButton startButton = new JButton("Start Game");
-        JButton optionButton = new JButton("Options");
-        JButton quitButton = new JButton("Exit Game");
-
-        startButton.addActionListener(new ButtonClickListener());
-        optionButton.addActionListener(new ButtonClickListener());
-        quitButton.addActionListener(new ButtonClickListener());
-
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        mainMenuFrame.add(gameLabel, gbc);
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.gridwidth = 1;
-        mainMenuFrame.add(startButton, gbc);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        mainMenuFrame.add(optionButton, gbc);
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridwidth = 2;
-        mainMenuFrame.add(quitButton, gbc);
-
-        mainMenuFrame.setVisible(true); // could probably make this separate if more calls are required before setting frame visible
-    }
-
     public static void setTitle(String _title) { title = _title; }
     public static String getTitle() { return title; }
 
@@ -255,8 +188,6 @@ public class GUI {
         }
         return location;
     }
-
-    //public colorStuffListener colorStuffListener = new colorStuffListener();
 
     private static boolean pieceSelected = false;
     //TODO: Figure out implementation to discover if the selected piece is movable by the current player
@@ -318,28 +249,28 @@ public class GUI {
         }
     }
 
-    private static class ButtonClickListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            String command = e.getActionCommand();
-            Object thing = e.getSource();
-            switch (command) {
-                case "Start Game":
-                    gameScreen(width, height); // run important logic for game start here
-                    break;
-                case "Options":
-                    // Obviously this will eventually be the Option menu with random included options
-                    new optionsMenu("Options", JFrame.DISPOSE_ON_CLOSE, width, height, new colorStuffListener());
-                    break;
-                case "Exit Game":
-                    System.exit(0); // "Safely" exit the program
-                    break;
-                case "Quit":
-                    gameFrame.dispose();
-                    break;
-                default:
-                    // it doesn't do anything, but it should eventually report an error in like a log file or something.
-                    break;
-            }
-        }
-    }
+//    private static class ButtonClickListener implements ActionListener {
+//        public void actionPerformed(ActionEvent e) {
+//            String command = e.getActionCommand();
+//            Object thing = e.getSource();
+//            switch (command) {
+//                case "Start Game":
+//                    gameScreen(width, height); // run important logic for game start here
+//                    break;
+//                case "Options":
+//                    // Obviously this will eventually be the Option menu with random included options
+//                    new optionsMenu("Options", JFrame.DISPOSE_ON_CLOSE, width, height, new colorListener());
+//                    break;
+//                case "Exit Game":
+//                    System.exit(0); // "Safely" exit the program
+//                    break;
+//                case "Quit":
+//                    gameFrame.dispose();
+//                    break;
+//                default:
+//                    // it doesn't do anything, but it should eventually report an error in like a log file or something.
+//                    break;
+//            }
+//        }
+//    }
 }
