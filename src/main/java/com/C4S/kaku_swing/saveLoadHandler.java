@@ -157,16 +157,9 @@ public class saveLoadHandler {
 
     public static int generateRGBCode(int r, int g, int b){
 
-        byte bytes[] = new byte[4]; // create a container for desired bytes
+        // change everything to 0s, except the first bit, in r, g, and b
+        // then shift g to the second byte, and b to the third byte, leaving one integer with its first three bytes filled with the first byte of the r, g, and b values
 
-        byte rb[] = ByteBuffer.allocate(4).putInt(r).array(); // convert integers to array forms of their bytes
-        byte gb[] = ByteBuffer.allocate(4).putInt(g).array();
-        byte bb[] = ByteBuffer.allocate(4).putInt(b).array();
-
-        bytes[1] = rb[3]; // fill bytes with the first byte of every integer
-        bytes[2] = gb[3];
-        bytes[3] = bb[3];
-
-        return ByteBuffer.wrap(bytes).getInt(); // convert byte array to integer and return it
+        return ((r&255)|((g&255)<<8)|(b&255)<<16);
     }
 }
