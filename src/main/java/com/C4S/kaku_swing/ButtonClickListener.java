@@ -1,12 +1,15 @@
 package com.C4S.kaku_swing;
 
+import javax.security.auth.login.LoginException;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import static com.C4S.kaku_swing.GUI.*;
+import static com.C4S.kaku_swing.GUI.*; // TODO: ONCE GAMESCREEN IS MOVED, CHANGE THIS
 
 public class ButtonClickListener implements ActionListener {
+
+
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         switch (command) {
@@ -24,7 +27,6 @@ public class ButtonClickListener implements ActionListener {
                 gameFrame.dispose();
                 break;
             default:
-                // it doesn't do anything, but it should eventually report an error in like a log file or something.
                 break;
         }
     }

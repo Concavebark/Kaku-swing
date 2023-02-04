@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MainMenu {
+
+
     private String mainMenuTitle = "Kaku-swing Chess";
     private JFrame mainMenuFrame = new JFrame(mainMenuTitle);
     private int width, height;
@@ -15,6 +17,7 @@ public class MainMenu {
      * @param height the height of the JFrame
      */
     public MainMenu(String mainMenuTitle, int width, int height) {
+
         mainMenuFrame.setTitle(mainMenuTitle);
         mainMenuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainMenuFrame.setSize(width, height);

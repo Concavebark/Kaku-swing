@@ -16,6 +16,7 @@ public class colorListener extends Component implements ActionListener {
                 boardColorA = JColorChooser.showDialog(this, "Select a Color", initialColor);
 
                 saveLoadHandler.writeToSettingsFile("colorA", String.valueOf(saveLoadHandler.generateRGBCode(boardColorA.getRed(), boardColorA.getGreen(), boardColorA.getBlue())));
+
             }
             case "Change ColorB" -> {
                 Color initialColor = boardColorB;
