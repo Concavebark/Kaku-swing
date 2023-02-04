@@ -166,27 +166,27 @@ public class GUI {
         attributeImages();
     }
 
-    public static void optionsMenu(int _width, int _height) { // I don't think these variables are actually needed
-        JFrame optionsFrame = new JFrame("Options");
-        optionsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Might need to change to hide while we update settings files in the background
-        optionsFrame.setSize(_width, _height);
-
-        JPanel optionsPanel = new JPanel(); // should probably use gridBag but idfk rn
-
-        JButton colorChangeA = new JButton("Change ColorA");
-        JButton colorChangeB = new JButton("Change ColorB");
-        JButton highlightChange = new JButton("Change Highlight Color");
-
-        colorChangeA.addActionListener(new colorStuffListener());
-        colorChangeB.addActionListener(new colorStuffListener());
-        highlightChange.addActionListener(new colorStuffListener());
-
-        optionsPanel.add(colorChangeA);
-        optionsPanel.add(colorChangeB);
-        optionsPanel.add(highlightChange);
-        optionsFrame.add(optionsPanel);
-        optionsFrame.setVisible(true);
-    }
+//    public static void optionsMenu(int _width, int _height) { // I don't think these variables are actually needed
+//        JFrame optionsFrame = new JFrame("Options");
+//        optionsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Might need to change to hide while we update settings files in the background
+//        optionsFrame.setSize(_width, _height);
+//
+//        JPanel optionsPanel = new JPanel(); // should probably use gridBag but idfk rn
+//
+//        JButton colorChangeA = new JButton("Change ColorA");
+//        JButton colorChangeB = new JButton("Change ColorB");
+//        JButton highlightChange = new JButton("Change Highlight Color");
+//
+//        colorChangeA.addActionListener(new colorStuffListener());
+//        colorChangeB.addActionListener(new colorStuffListener());
+//        highlightChange.addActionListener(new colorStuffListener());
+//
+//        optionsPanel.add(colorChangeA);
+//        optionsPanel.add(colorChangeB);
+//        optionsPanel.add(highlightChange);
+//        optionsFrame.add(optionsPanel);
+//        optionsFrame.setVisible(true);
+//    }
 
     public static void genMainMenu(String _MainMenuTitle, int _width, int _height) {
 
@@ -256,32 +256,7 @@ public class GUI {
         return location;
     }
 
-    private static class colorStuffListener extends Component implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            String command = e.getActionCommand();
-            switch (command) {
-                case "Change ColorA" -> {
-                    Color initialColor = boardColorA;
-                    boardColorA = JColorChooser.showDialog(this, "Select a Color", initialColor);
-
-                    saveLoadHandler.writeToSettingsFile("colorA", String.valueOf(saveLoadHandler.generateRGBCode(boardColorA.getRed(), boardColorA.getGreen(), boardColorA.getBlue())));
-                }
-                case "Change ColorB" -> {
-                    Color initialColor = boardColorB;
-                    boardColorB = JColorChooser.showDialog(this, "Select a Color", initialColor);
-
-                    saveLoadHandler.writeToSettingsFile("colorB", String.valueOf(saveLoadHandler.generateRGBCode(boardColorB.getRed(), boardColorB.getGreen(), boardColorB.getBlue())));
-                }
-                case "Change Highlight Color" -> {
-                    Color initialColor = highlightColor;
-                    highlightColor = JColorChooser.showDialog(this, "Select a Color", initialColor);
-
-                    saveLoadHandler.writeToSettingsFile("colorH", String.valueOf(saveLoadHandler.generateRGBCode(highlightColor.getRed(), highlightColor.getGreen(), highlightColor.getBlue())));
-                }
-            }
-
-        }
-    }
+    //public colorStuffListener colorStuffListener = new colorStuffListener();
 
     private static boolean pieceSelected = false;
     //TODO: Figure out implementation to discover if the selected piece is movable by the current player
@@ -353,7 +328,7 @@ public class GUI {
                     break;
                 case "Options":
                     // Obviously this will eventually be the Option menu with random included options
-                    optionsMenu(width, height);
+                    new optionsMenu("Options", JFrame.DISPOSE_ON_CLOSE, width, height, new colorStuffListener());
                     break;
                 case "Exit Game":
                     System.exit(0); // "Safely" exit the program

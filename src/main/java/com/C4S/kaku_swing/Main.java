@@ -5,7 +5,7 @@ public class  Main {
     private static int width = 400;
     private static int height = 400;
 
-    public static void main(String[] args) { // could probably do some shitty logic heres with how i've implemented GUI
+    public static void main(String[] args) { // could probably do some shitty logic here's with how I've implemented GUI
 
         GUI.genMainMenu("Kaku-swing Chess", width, height);
     }
