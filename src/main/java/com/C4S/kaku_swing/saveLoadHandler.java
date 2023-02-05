@@ -1,5 +1,13 @@
 package com.C4S.kaku_swing;
 
+/*
+Written by James Koehler
+
+This little chunk of code handles all json file interactions, and some other methods to help out.
+This includes saving and loading games from the save file, and saving and loading from the settings file.
+There are also methods in here used when decoding and encoding things for the save file.
+ */
+
 import org.json.simple.*;
 import org.json.simple.parser.*;
 
@@ -13,14 +21,9 @@ import net.harawata.appdirs.AppDirsFactory;
 
 public class saveLoadHandler { // NOTE: this assumes the user is on windows, as it uses AppData
 
-    public static void writeToSaveFile(String index, String value){
+    // TODO: os detection to move saving location elsewhere when on linux or other target platforms
 
-        /* TODO: i might make saving boardstates something handled in kaku? either way its gonna be in algebraic; not this shit
-        Save format will have a saved game as the key, and the moves made saved in PGN. The engine needs to be able to store all moves made and convert to and from PGN.
-        Example:
-        "Game 1": "1.Nf3 Nf6 2.c4 g6 3.Nc3 Bg7 4.d4 O-O 5.Bf4 d5 6.Qb3 dxc4 7.Qxc4 c6 8.e4 Nbd7",
-        "Game 2": "1.Nf3 Nf6 2.c4 g6 3.Nc3 Bg7 4.d4 O-O 5.Bf4 d5 6.Qb3 dxc4 7.Qxc4 c6 8.e4 Nbd7" <- imagine these games don't have the same moves made. I am lazy.
-         */
+    public static void writeToSaveFile(String index, String value){ // this will follow algebraic chess notation
 
         JSONParser parser = new JSONParser();
         JSONObject obj = new JSONObject();
@@ -30,19 +33,20 @@ public class saveLoadHandler { // NOTE: this assumes the user is on windows, as 
         try(FileReader reader = new FileReader(appDirs.getUserDataDir("kaku-swing",null,"C4 Software") + "/save.json")){
 
             obj = (JSONObject)parser.parse(reader); // pass the save file into the json object
-        }catch(FileNotFoundException e){ // generate save file since one was not found
+        }catch(FileNotFoundException e){ // save file can't be located
 
             logWriter.log("No save.json file was found. Creating one now...", logLevels.WARNING);
 
             File theDir = new File(appDirs.getUserDataDir("kaku-swing",null,"C4 Software"));
 
-            if(!theDir.exists()) // generate our directory in AppData
-                theDir.mkdirs();
+            if(!theDir.exists())  // generate our directory in AppData
+                if(!theDir.mkdirs())
+                    logWriter.log("Something went wrong creating the AppData directory! This will cause more file system errors!", logLevels.SEVERE);
 
             try(FileWriter file = new FileWriter(appDirs.getUserDataDir("kaku-swing",null,"C4 Software") + "/save.json")){
 
                 file.write(obj.toJSONString()); // make the actual file and write the json object to it
-            } catch (Exception ee){
+            } catch (Exception ee){ // something is preventing file creation
 
                 logWriter.log("Something went wrong when generating a new save.json.", logLevels.SEVERE);
             }
@@ -86,8 +90,9 @@ public class saveLoadHandler { // NOTE: this assumes the user is on windows, as 
 
             File theDir = new File(appDirs.getUserDataDir("kaku-swing",null,"C4 Software"));
 
-            if(!theDir.exists())
-                theDir.mkdirs();
+            if(!theDir.exists())  // generate our directory in AppData
+                if(!theDir.mkdirs())
+                    logWriter.log("Something went wrong creating the AppData directory! This will cause more file system errors!", logLevels.SEVERE);
 
             try(FileWriter file = new FileWriter(appDirs.getUserDataDir("kaku-swing",null,"C4 Software") + "/settings.json")){
 
@@ -136,8 +141,9 @@ public class saveLoadHandler { // NOTE: this assumes the user is on windows, as 
 
             File theDir = new File(appDirs.getUserDataDir("kaku-swing",null,"C4 Software"));
 
-            if(!theDir.exists())
-                theDir.mkdirs();
+            if(!theDir.exists())  // generate our directory in AppData
+                if(!theDir.mkdirs())
+                    logWriter.log("Something went wrong creating the AppData directory! This will cause more file system errors!", logLevels.SEVERE);
 
             try(FileWriter file = new FileWriter(appDirs.getUserDataDir("kaku-swing",null,"C4 Software") + "/settings.json")){
 
