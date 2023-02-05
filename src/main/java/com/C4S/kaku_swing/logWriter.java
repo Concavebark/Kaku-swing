@@ -9,8 +9,9 @@ import java.time.format.DateTimeFormatter;
 /***
  * Simple LogWriting class written by @Devin-LM
  */
-public class LogWriter { // TODO: can we make this static
-    private String _fileName;
+public class logWriter {
+    private static String _fileName;
+    /*
     public LogWriter() {
         _fileName = "kakuLog.log";
     }
@@ -18,8 +19,9 @@ public class LogWriter { // TODO: can we make this static
     public LogWriter(String fileName) {
         _fileName = fileName;
     }
+    */
 
-    public void log(String message, logLevels level) {
+    public static void log(String message, logLevels level) {
         createFile(_fileName);
         try {
             LocalDateTime dateTime = LocalDateTime.now();
@@ -38,7 +40,7 @@ public class LogWriter { // TODO: can we make this static
         }
     }
 
-    private void createFile(String fileName) {
+    private static void createFile(String fileName) {
         try {
             File logFile = new File(fileName);
             if (logFile.createNewFile()) {
