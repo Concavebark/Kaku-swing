@@ -37,24 +37,24 @@ public class saveLoadHandler { // NOTE: this assumes the user is on windows, as 
             obj = (JSONObject)parser.parse(reader); // pass the save file into the json object
         }catch(FileNotFoundException e){ // save file can't be located
 
-            logWriter.log("No save.json file was found. Creating one now...", logLevels.WARNING);
+            LogWriter.log("No save.json file was found. Creating one now...", LogLevels.WARNING);
 
             File theDir = new File(appDirs.getUserDataDir("kaku-swing",null,"C4 Software"));
 
             if(!theDir.exists())  // generate our directory in AppData
                 if(!theDir.mkdirs())
-                    logWriter.log("Something went wrong creating the AppData directory! This will cause more file system errors!", logLevels.SEVERE);
+                    LogWriter.log("Something went wrong creating the AppData directory! This will cause more file system errors!", LogLevels.SEVERE);
 
             try(FileWriter file = new FileWriter(appDirs.getUserDataDir("kaku-swing",null,"C4 Software") + "/save.json")){
 
                 file.write(obj.toJSONString()); // make the actual file and write the json object to it
             } catch (Exception ee){ // something is preventing file creation
 
-                logWriter.log("Something went wrong when generating a new save.json.", logLevels.SEVERE);
+                LogWriter.log("Something went wrong when generating a new save.json.", LogLevels.SEVERE);
             }
         } catch (Exception e ){
 
-            logWriter.log("An unknown error occurred when reading save.json.", logLevels.SEVERE);
+            LogWriter.log("An unknown error occurred when reading save.json.", LogLevels.SEVERE);
         }
 
         obj.put(index, value);
@@ -64,7 +64,7 @@ public class saveLoadHandler { // NOTE: this assumes the user is on windows, as 
             file.write(obj.toJSONString());
         } catch (Exception ee){
 
-            logWriter.log("Something went wrong when saving changes to save.json.", logLevels.SEVERE);
+            LogWriter.log("Something went wrong when saving changes to save.json.", LogLevels.SEVERE);
         }
     }
 
@@ -81,12 +81,12 @@ public class saveLoadHandler { // NOTE: this assumes the user is on windows, as 
             obj = (JSONObject)parser.parse(new FileReader(appDirs.getUserDataDir("kaku-swing",null,"C4 Software") + "/save.json"));
         } catch (FileNotFoundException e){ // no save! we will start a new game instead
 
-            logWriter.log("Save file access attempted when no save was present! Starting a new game.", logLevels.WARNING);
+            LogWriter.log("Save file access attempted when no save was present! Starting a new game.", LogLevels.WARNING);
             isWhiteTurn = true; // white goes first
             return new Board().getBoardState(); // this will return the default board state
         } catch(Exception e){
 
-            logWriter.log("An unknown error occured when reading save.json.", logLevels.SEVERE);
+            LogWriter.log("An unknown error occured when reading save.json.", LogLevels.SEVERE);
         }
 
         //return algebraicToBoardState(obj.get(index).toString()); // TODO: Implement this!
@@ -105,7 +105,7 @@ public class saveLoadHandler { // NOTE: this assumes the user is on windows, as 
             obj = (JSONObject)parser.parse(reader);
         }catch(FileNotFoundException e){
 
-            logWriter.log("No settings.json file was found. Creating one now...", logLevels.WARNING);
+            LogWriter.log("No settings.json file was found. Creating one now...", LogLevels.WARNING);
 
             int colorA = generateRGBCode(255, 255, 255);
             int colorB = generateRGBCode(0, 0, 0);
@@ -119,18 +119,18 @@ public class saveLoadHandler { // NOTE: this assumes the user is on windows, as 
 
             if(!theDir.exists())  // generate our directory in AppData
                 if(!theDir.mkdirs())
-                    logWriter.log("Something went wrong creating the AppData directory! This will cause more file system errors!", logLevels.SEVERE);
+                    LogWriter.log("Something went wrong creating the AppData directory! This will cause more file system errors!", LogLevels.SEVERE);
 
             try(FileWriter file = new FileWriter(appDirs.getUserDataDir("kaku-swing",null,"C4 Software") + "/settings.json")){
 
                 file.write(obj.toJSONString());
             } catch (Exception ee){
 
-                logWriter.log("Something went wrong when generating a new settings.json.", logLevels.SEVERE);
+                LogWriter.log("Something went wrong when generating a new settings.json.", LogLevels.SEVERE);
             }
         } catch (Exception e ){
 
-            logWriter.log("An unknown error occurred when reading settings.json.", logLevels.SEVERE);
+            LogWriter.log("An unknown error occurred when reading settings.json.", LogLevels.SEVERE);
         }
 
         obj.put(index, value);
@@ -140,7 +140,7 @@ public class saveLoadHandler { // NOTE: this assumes the user is on windows, as 
             file.write(obj.toJSONString());
         } catch (Exception ee){
 
-            logWriter.log("Something went wrong when saving changes to settings.json.", logLevels.SEVERE);
+            LogWriter.log("Something went wrong when saving changes to settings.json.", LogLevels.SEVERE);
         }
     }
 
@@ -156,7 +156,7 @@ public class saveLoadHandler { // NOTE: this assumes the user is on windows, as 
             obj = (JSONObject)parser.parse(new FileReader(appDirs.getUserDataDir("kaku-swing",null,"C4 Software") + "/settings.json"));
         } catch (FileNotFoundException e){
 
-            logWriter.log("No settings.json file was found. Creating one now...", logLevels.WARNING);
+            LogWriter.log("No settings.json file was found. Creating one now...", LogLevels.WARNING);
 
             int colorA = generateRGBCode(255, 255, 255);
             int colorB = generateRGBCode(0, 0, 0);
@@ -170,18 +170,18 @@ public class saveLoadHandler { // NOTE: this assumes the user is on windows, as 
 
             if(!theDir.exists())  // generate our directory in AppData
                 if(!theDir.mkdirs())
-                    logWriter.log("Something went wrong creating the AppData directory! This will cause more file system errors!", logLevels.SEVERE);
+                    LogWriter.log("Something went wrong creating the AppData directory! This will cause more file system errors!", LogLevels.SEVERE);
 
             try(FileWriter file = new FileWriter(appDirs.getUserDataDir("kaku-swing",null,"C4 Software") + "/settings.json")){
 
                 file.write(obj.toJSONString());
             } catch (Exception ee){
 
-                logWriter.log("Something went wrong when generating a new settings.json.", logLevels.SEVERE);
+                LogWriter.log("Something went wrong when generating a new settings.json.", LogLevels.SEVERE);
             }
         } catch(Exception e){
 
-            logWriter.log("An unknown error occured when reading settings.json.", logLevels.SEVERE);
+            LogWriter.log("An unknown error occured when reading settings.json.", LogLevels.SEVERE);
         }
 
         return obj.get(index).toString();
