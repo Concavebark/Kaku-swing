@@ -3,9 +3,8 @@ package com.C4S.kaku_swing;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.logging.FileHandler;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /***
  * Simple LogWriting class written by @Devin-LM
@@ -20,12 +19,19 @@ public class LogWriter {
         _fileName = fileName;
     }
 
-    public void log(String message, int level) {
+    public void log(String message, logLevels level) {
         createFile(_fileName);
         try {
+            LocalDateTime dateTime = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+            String formattedDateTime = dateTime.format(formatter);
+
             FileWriter logWriter = new FileWriter(_fileName);
-            logWriter.write(message);
+
+            logWriter.write(formattedDateTime + " - [level] " + message);
+
             logWriter.close();
+
             System.out.println("Log writing successful.");
         } catch (IOException e) {
             throw new RuntimeException(e);

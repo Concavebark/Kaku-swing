@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.event.ActionListener;
 
 public class optionsMenu {
-    private LogWriter logWriter = new LogWriter();
     private String optionsFrameTitle = "Options";
     private JFrame optionsFrame = new JFrame(optionsFrameTitle);
     private int width, height;
@@ -16,7 +15,6 @@ public class optionsMenu {
      * OptionsMenu is a generated JFrame class that displays options for Swing variation of Kaku the empty param call is set up to be easy to use quickly for testing purposes and is not designed to be used for full time use
      */
     public optionsMenu() {
-        logWriter.logInfo("Generating new blank optionsMenu.");
 
         optionsFrame.setTitle(optionsFrameTitle);
         optionsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -46,9 +44,6 @@ public class optionsMenu {
      * @param colorListener the action listener for handling color changes
      */
     public optionsMenu(String optionsFrameTitle, int closeOperation, int width, int height, ActionListener colorListener) {
-        logWriter.logInfo("Generating new full param optionsMenu." +
-                " optionsFrameTitle: " + optionsFrameTitle + " closeOperation: " + closeOperation +
-                " width: " + width + " height: " + height + " ActionListener: " + colorListener.toString() +  ". ");
 
         optionsFrame.setTitle(optionsFrameTitle);
         optionsFrame.setDefaultCloseOperation(closeOperation);
