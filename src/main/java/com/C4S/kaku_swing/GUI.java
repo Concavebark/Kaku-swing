@@ -19,6 +19,7 @@ public class GUI {
     /* Two ways to go about importing images for use with the GUI,
         looping through res folder and looking for names,
         or hardcoding, start with hardcoding
+        TODO: we should implement the folder thing soon
      */
     private static ImageIcon whiteRook = new ImageIcon("res/whiteRook.png");
     private static ImageIcon whiteKnight = new ImageIcon("res/whiteKnight.png");

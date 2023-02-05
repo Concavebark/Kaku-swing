@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 /***
  * Simple LogWriting class written by @Devin-LM
  */
-public class LogWriter {
+public class LogWriter { // TODO: can we make this static
     private String _fileName;
     public LogWriter() {
         _fileName = "kakuLog.log";
