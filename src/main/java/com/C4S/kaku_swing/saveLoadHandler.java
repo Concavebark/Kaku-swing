@@ -8,6 +8,8 @@ This includes saving and loading games from the save file, and saving and loadin
 There are also methods in here used when decoding and encoding things for the save file.
  */
 
+import net.jameskoehler.kaku.Board;
+import net.jameskoehler.kaku.Piece;
 import org.json.simple.*;
 import org.json.simple.parser.*;
 
@@ -64,6 +66,31 @@ public class saveLoadHandler { // NOTE: this assumes the user is on windows, as 
 
             logWriter.log("Something went wrong when saving changes to save.json.", logLevels.SEVERE);
         }
+    }
+
+    public static Piece[][] readFromSaveFile(String index, boolean isWhiteTurn){
+
+        // first we have to read the correct game save from the file
+        JSONParser parser = new JSONParser();
+        JSONObject obj = new JSONObject();
+
+        AppDirs appDirs = AppDirsFactory.getInstance();
+
+        try{
+
+            obj = (JSONObject)parser.parse(new FileReader(appDirs.getUserDataDir("kaku-swing",null,"C4 Software") + "/save.json"));
+        } catch (FileNotFoundException e){ // no save! we will start a new game instead
+
+            logWriter.log("Save file access attempted when no save was present! Starting a new game.", logLevels.WARNING);
+            isWhiteTurn = true; // white goes first
+            return new Board().getBoardState(); // this will return the default board state
+        } catch(Exception e){
+
+            logWriter.log("An unknown error occured when reading save.json.", logLevels.SEVERE);
+        }
+
+        //return algebraicToBoardState(obj.get(index).toString()); // TODO: Implement this!
+        return new Board().getBoardState(); // This is just a fix to stop errors
     }
 
     public static void writeToSettingsFile(String index, String value){
@@ -166,5 +193,10 @@ public class saveLoadHandler { // NOTE: this assumes the user is on windows, as 
         // then shift g to the second byte, and b to the third byte, leaving one integer with its first three bytes filled with the first byte of the r, g, and b values
 
         return ((r&255)|((g&255)<<8)|(b&255)<<16);
+    }
+
+    private static Piece[][] algebraicToBoardState(String moves){ // TODO: I will make this a feature in kaku
+
+        return new Board().getBoardState(); // this is just a temporary fix to stop errors. remove this!
     }
 }
