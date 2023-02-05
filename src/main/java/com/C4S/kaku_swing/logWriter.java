@@ -28,7 +28,7 @@ public class logWriter {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
             String formattedDateTime = dateTime.format(formatter);
 
-            FileWriter logWriter = new FileWriter(_fileName);
+            FileWriter logWriter = new FileWriter(_fileName, true);
 
             logWriter.write(formattedDateTime + " - [level] " + message);
 
