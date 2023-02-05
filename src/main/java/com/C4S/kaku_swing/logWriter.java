@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
  * Simple LogWriting class written by @Devin-LM
  */
 public class logWriter {
-    private static String _fileName;
+    private static String _fileName = "kakuLog.log";
     /*
     public LogWriter() {
         _fileName = "kakuLog.log";
@@ -38,6 +38,11 @@ public class logWriter {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static void changeFileName(String fileName){
+
+        _fileName = fileName;
     }
 
     private static void createFile(String fileName) {
