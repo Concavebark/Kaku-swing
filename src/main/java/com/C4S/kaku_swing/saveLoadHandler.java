@@ -11,8 +11,6 @@ import java.io.File;
 import net.harawata.appdirs.AppDirs;
 import net.harawata.appdirs.AppDirsFactory;
 
-// TODO: change all the System out messages to logging
-
 public class saveLoadHandler { // NOTE: this assumes the user is on windows, as it uses AppData
 
     public static void writeToSaveFile(String index, String value){
@@ -34,7 +32,7 @@ public class saveLoadHandler { // NOTE: this assumes the user is on windows, as 
             obj = (JSONObject)parser.parse(reader); // pass the save file into the json object
         }catch(FileNotFoundException e){ // generate save file since one was not found
 
-            System.out.println("No save.json file was found. Creating one now...");
+            logWriter.log("No save.json file was found. Creating one now...", logLevels.WARNING);
 
             File theDir = new File(appDirs.getUserDataDir("kaku-swing",null,"C4 Software"));
 
@@ -46,11 +44,11 @@ public class saveLoadHandler { // NOTE: this assumes the user is on windows, as 
                 file.write(obj.toJSONString()); // make the actual file and write the json object to it
             } catch (Exception ee){
 
-                System.out.println("Something went wrong when generating a new save.json.");
+                logWriter.log("Something went wrong when generating a new save.json.", logLevels.SEVERE);
             }
         } catch (Exception e ){
 
-            System.out.println("An unknown error occurred when reading save.json.");
+            logWriter.log("An unknown error occurred when reading save.json.", logLevels.SEVERE);
         }
 
         obj.put(index, value);
@@ -60,7 +58,7 @@ public class saveLoadHandler { // NOTE: this assumes the user is on windows, as 
             file.write(obj.toJSONString());
         } catch (Exception ee){
 
-            System.out.println("Something went wrong when saving changes to save.json.");
+            logWriter.log("Something went wrong when saving changes to save.json.", logLevels.SEVERE);
         }
     }
 
@@ -76,7 +74,7 @@ public class saveLoadHandler { // NOTE: this assumes the user is on windows, as 
             obj = (JSONObject)parser.parse(reader);
         }catch(FileNotFoundException e){
 
-            System.out.println("No settings.json file was found. Creating one now...");
+            logWriter.log("No settings.json file was found. Creating one now...", logLevels.WARNING);
 
             int colorA = generateRGBCode(255, 255, 255);
             int colorB = generateRGBCode(0, 0, 0);
@@ -96,11 +94,11 @@ public class saveLoadHandler { // NOTE: this assumes the user is on windows, as 
                 file.write(obj.toJSONString());
             } catch (Exception ee){
 
-                System.out.println("Something went wrong when generating a new settings.json.");
+                logWriter.log("Something went wrong when generating a new settings.json.", logLevels.SEVERE);
             }
         } catch (Exception e ){
 
-            System.out.println("An unknown error occurred when reading settings.json.");
+            logWriter.log("An unknown error occurred when reading settings.json.", logLevels.SEVERE);
         }
 
         obj.put(index, value);
@@ -110,7 +108,7 @@ public class saveLoadHandler { // NOTE: this assumes the user is on windows, as 
             file.write(obj.toJSONString());
         } catch (Exception ee){
 
-            System.out.println("Something went wrong when saving changes to settings.json.");
+            logWriter.log("Something went wrong when saving changes to settings.json.", logLevels.SEVERE);
         }
     }
 
@@ -126,7 +124,7 @@ public class saveLoadHandler { // NOTE: this assumes the user is on windows, as 
             obj = (JSONObject)parser.parse(new FileReader(appDirs.getUserDataDir("kaku-swing",null,"C4 Software") + "/settings.json"));
         } catch (FileNotFoundException e){
 
-            System.out.println("No settings.json file was found. Creating one now...");
+            logWriter.log("No settings.json file was found. Creating one now...", logLevels.WARNING);
 
             int colorA = generateRGBCode(255, 255, 255);
             int colorB = generateRGBCode(0, 0, 0);
@@ -146,11 +144,11 @@ public class saveLoadHandler { // NOTE: this assumes the user is on windows, as 
                 file.write(obj.toJSONString());
             } catch (Exception ee){
 
-                System.out.println("Something went wrong when generating a new settings.json.");
+                logWriter.log("Something went wrong when generating a new settings.json.", logLevels.SEVERE);
             }
         } catch(Exception e){
 
-            System.out.println("An unknown error occured when reading settings.json.");
+            logWriter.log("An unknown error occured when reading settings.json.", logLevels.SEVERE);
         }
 
         return obj.get(index).toString();
