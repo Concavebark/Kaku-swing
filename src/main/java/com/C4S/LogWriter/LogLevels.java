@@ -1,4 +1,4 @@
-package com.C4S.kaku_swing;
+package com.C4S.LogWriter;
 
 /***
  * LogLevels is an enum file that is used along-side the LogWriter class to allow signifying the level of a log in the log file

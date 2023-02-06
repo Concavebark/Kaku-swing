@@ -1,4 +1,4 @@
-package com.C4S.kaku_swing;
+package com.C4S.LogWriter;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter;
  * Simple LogWriting class written by @Devin-LM
  */
 public class LogWriter {
-    private static final String FILE_NAME = "kakuLog.log";
+    private static final String FILE_NAME = "log.log";
 
     /***
      * Simple log method to write program logs to a file

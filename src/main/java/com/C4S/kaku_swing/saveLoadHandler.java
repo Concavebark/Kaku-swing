@@ -8,6 +8,8 @@ This includes saving and loading games from the save file, and saving and loadin
 There are also methods in here used when decoding and encoding things for the save file.
  */
 
+import com.C4S.LogWriter.LogLevels;
+import com.C4S.LogWriter.LogWriter;
 import net.jameskoehler.kaku.Board;
 import net.jameskoehler.kaku.Piece;
 import org.json.simple.*;
@@ -101,7 +103,7 @@ public class saveLoadHandler { // NOTE: this assumes the user is on windows, as 
         AppDirs appDirs = AppDirsFactory.getInstance();
 
         try(FileReader reader = new FileReader(appDirs.getUserDataDir("kaku-swing",null,"C4 Software") + "/settings.json")){
-
+            System.out.println(appDirs.getUserDataDir("kaku-swing",null,"C4 Software") + "/save.json");
             obj = (JSONObject)parser.parse(reader);
         }catch(FileNotFoundException e){
 
@@ -175,7 +177,7 @@ public class saveLoadHandler { // NOTE: this assumes the user is on windows, as 
             try(FileWriter file = new FileWriter(appDirs.getUserDataDir("kaku-swing",null,"C4 Software") + "/settings.json")){
 
                 file.write(obj.toJSONString());
-            } catch (Exception ee){
+            } catch (Exception ee){ /// HEADS UP, THESE REALLY SHOULDN'T BE BLANKET CATCHES FOR EVERY EXCEPTION AND IT SHOULD BE WRITTEN TO THE LOGS THAT AN EXCEPTION IS BEING THROWN
 
                 LogWriter.log("Something went wrong when generating a new settings.json.", LogLevels.SEVERE);
             }
