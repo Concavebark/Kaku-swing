@@ -194,7 +194,7 @@ public class saveLoadHandler { // NOTE: this assumes the user is on windows, as 
         // change everything to 0s, except the first bit, in r, g, and b
         // then shift g to the second byte, and b to the third byte, leaving one integer with its first three bytes filled with the first byte of the r, g, and b values
 
-        return ((r&255)|((g&255)<<8)|(b&255)<<16);
+        return ((r&255)<<16)|((g&255)<<8)|(b&255);
     }
 
     private static Piece[][] algebraicToBoardState(String moves){ // TODO: I will make this a feature in kaku
